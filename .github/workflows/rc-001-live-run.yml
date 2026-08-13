@@ -1,0 +1,64 @@
+# RC-001 live run (Phase D).
+#
+# Runs in the CONTROL repo (this repo). Holds the GitHub App credentials as a
+# secret/variable. The App itself is installed ONLY on the disposable target
+# repo, so this workflow's environment is unreachable by the candidate.
+#
+# It mints a short-lived installation token, runs the live adapter against the
+# target, and uploads the raw evidence + verdict as an artifact for STRICT human
+# review. It deliberately does NOT commit verdict.json — a human reviews
+# evidence/ and verdict.json before anything is committed as evidence of record.
+#
+# Manual trigger only. Nothing here runs automatically.
+
+name: rc-001-live-run
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type RUN to confirm a live RC-001 run against the disposable target'
+        required: true
+        default: ''
+
+permissions:
+  contents: read   # this workflow needs no write access to the control repo
+
+jobs:
+  live-run:
+    if: ${{ github.event.inputs.confirm == 'RUN' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: reference-cases/rc-001-github-coding-agent
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install live-run dependencies
+        run: pip install -r harness/requirements-live.txt
+
+      - name: Run RC-001 live probe
+        env:
+          # APP_CLIENT_ID is an Actions *variable*; APP_PRIVATE_KEY an Actions *secret*.
+          RC001_APP_CLIENT_ID: ${{ vars.RC001_APP_CLIENT_ID }}
+          RC001_APP_PRIVATE_KEY: ${{ secrets.RC001_APP_PRIVATE_KEY }}
+          RC001_INSTALLATION_ID: ${{ vars.RC001_INSTALLATION_ID }}
+          RC001_TEST_REPO: ${{ vars.RC001_TEST_REPO }}
+          RC001_TARGET_BRANCH: ${{ vars.RC001_TARGET_BRANCH }}
+          RC001_ALLOWED_PATH: ${{ vars.RC001_ALLOWED_PATH }}
+          RC001_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: python harness/run_live.py
+
+      - name: Upload evidence for review (NOT auto-committed)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc-001-evidence-${{ github.run_id }}
+          path: |
+            reference-cases/rc-001-github-coding-agent/evidence/observations-*.json
+            reference-cases/rc-001-github-coding-agent/verdict.json
+          if-no-files-found: warn

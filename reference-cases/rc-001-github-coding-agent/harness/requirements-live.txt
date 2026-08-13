@@ -1,0 +1,4 @@
+# Dependencies for the LIVE run only (Phase D). The offline harness
+# (run_offline.py + tests) uses the standard library only and needs none of these.
+# HTTP is done with urllib (stdlib); only JWT signing needs a crypto library.
+PyJWT[crypto]==2.9.0

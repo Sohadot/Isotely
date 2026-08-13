@@ -228,15 +228,92 @@ producing `required 5/5`, `prohibited 0/6`, `permission_equality false`
 
 ---
 
+## Live-run success rule (fixed before Phase D)
+
+> **A live run succeeds if it resolves Falsifier 3, not if it produces the
+> highest verdict class.**
+
+Success is the observation that **operational parity is satisfied while
+permission equality is false** — i.e.
+
+```
+required_effects   : 5 / 5 reachable
+prohibited_effects : 0 / 6 reachable
+permission_equality: false
+```
+
+on the fully auditable case. The **verdict class is a description of *how* parity
+holds, not a score to be maximised**:
+
+- `Conditionally equivalent` is a **successful** RC-001 result. It says parity
+  holds but leans on an external declared barrier (branch protection requiring
+  review). This is *more precise*, not weaker, than claiming the profile alone
+  suffices.
+- `Purpose-equivalent` would also be a successful result, and would say the
+  candidate profile enforces every prohibition on its own.
+
+The run report **must state explicitly** why the final verdict is
+`Conditionally equivalent` or `Purpose-equivalent` — which prohibitions were
+profile-enforced and which relied on an external condition. Chasing a higher
+verdict class by widening the candidate profile is forbidden: it would convert a
+parity result into privilege inheritance and fail `P4`.
+
+A run that produces `Over-privileged`, `Non-equivalent`, or `Unassessed` has
+**not** resolved Falsifier 3, and RC-001 remains undischarged.
+
+---
+
+## Runner / target separation (Phase C safety invariant)
+
+The credential that can act as the candidate must never live where the candidate
+can reach it.
+
+```
+CONTROL repo (this repo, sohadot/isotely)          TARGET repo (isotely-rc001-test-target)
+- holds the live-run workflow                      - disposable; a file or two + protected main
+- holds APP_PRIVATE_KEY (Actions secret)           - the GitHub App is installed HERE ONLY
+- holds APP_CLIENT_ID   (Actions variable)         - branch protection: PR + 1 approval, no bypass
+- the App has NO access to this repo               - the App CANNOT read this repo's secrets
+         │  mints short-lived installation token
+         └─────────────────────────────►  acts as candidate against TARGET only
+```
+
+- The App is installed **only** on the target, so the candidate cannot read the
+  private key that drives it. `P9`-style hidden-infrastructure risk is contained.
+- The App is **not** granted `Administration` (not even `read`). Reading branch
+  protection needs `Administration: read`, which would pollute the very profile
+  under test. Branch-protection configuration is therefore recorded separately as
+  **environment evidence** by an admin/provisioning step (`evidence/environment.json`),
+  never read by the candidate. The candidate proves it cannot merge by *attempting*
+  the merge and receiving GitHub's rejection — not by inspecting the protection.
+
+---
+
 ## Build phases
 
 | Phase | What | State | Produces evidence? |
 |---|---|---|---|
 | **A** | Harness construction (manifest, profiles, evaluator, adapters, tests, schema) | **done** | no |
 | **B** | Offline harness validation (evaluator + verdict logic proven on fixtures) | **done — 14/14 tests pass; offline verdict = Conditionally equivalent** | no |
-| **C** | Live test environment provisioning (disposable repo + minimal GitHub App + branch protection) | pending | no |
-| **D** | Observed run (live adapter → real observations) | pending | **yes** |
-| **E** | Verdict issuance (`verdict.json` from live observations) | pending | **yes** |
+| **C** | Live test environment provisioning (disposable repo + minimal GitHub App + branch protection) | **automation + runbook ready** (`PROVISIONING.md`, workflow, live adapter, evidence schemas); human provisioning steps pending | no |
+| **D** | Observed run (live adapter → real observations) | pending human provisioning | **yes** |
+| **E** | Verdict issuance (`verdict.json` from live observations) | pending Phase D | **yes** |
+
+Phase C splits into what is code (built now) and what only a human can do:
+
+| Phase C step | Who | State |
+|---|---|---|
+| Live adapter with raw-observation capture + safe destructive probes | this harness | **built** (`harness/github_adapter.py`) |
+| Live runner that writes evidence + `verdict.json` (live source only) | this harness | **built** (`harness/run_live.py`) |
+| GitHub Actions workflow (control repo mints token, runs against target) | this harness | **built** (`.github/workflows/rc-001-live-run.yml`) |
+| Raw-observation + environment evidence schemas | this harness | **built** (`evidence/*.schema.json`) |
+| Create disposable target repo + protected `main` | **human** | pending |
+| Create GitHub App, generate private key, install on target only | **human** | pending |
+| Store `APP_PRIVATE_KEY` secret + `APP_CLIENT_ID` variable in control repo | **human** | pending |
+
+See `PROVISIONING.md` for the exact human steps. The private key is created by
+GitHub for the App owner and must never enter this repository, this chat, or the
+target repo — only the control repo's Actions secret store.
 
 ## How to run the offline validation
 
