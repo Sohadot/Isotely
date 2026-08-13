@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "isotely/rc-001/verdict.schema.json",
+  "title": "RC-001 verdict.json",
+  "description": "Shape of the evidence artifact produced ONLY by a live observed run (Phase E). This schema exists so the shape is fixed in advance; it does not assert that any run has occurred. verdict.json itself is intentionally absent until a live run produces one.",
+  "type": "object",
+  "required": ["verdict", "observation_source", "permission_equality", "classes_differ", "reasons"],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "Unassessed",
+        "Non-equivalent",
+        "Over-privileged",
+        "Conditionally equivalent",
+        "Purpose-equivalent",
+        "Structurally-invalid (not an Isotely configuration)"
+      ]
+    },
+    "observation_source": {
+      "type": "string",
+      "enum": ["live"],
+      "description": "verdict.json MUST come from a live run. fixture/none are rejected as evidence."
+    },
+    "permission_equality": { "type": ["boolean", "null"] },
+    "classes_differ": { "type": ["boolean", "null"] },
+    "required": {
+      "type": "object",
+      "properties": {
+        "passed": { "type": "integer" },
+        "total": { "type": "integer" },
+        "failed_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "prohibited": {
+      "type": "object",
+      "properties": {
+        "reachable": { "type": "integer" },
+        "total": { "type": "integer" },
+        "reachable_ids": { "type": "array", "items": { "type": "string" } },
+        "blocked_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "external_conditions": { "type": "array", "items": { "type": "string" } },
+    "reasons": { "type": "array", "items": { "type": "string" } }
+  }
+}

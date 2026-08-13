@@ -1,0 +1,175 @@
+{
+  "manifest_version": "1.0",
+  "case_id": "rc-001-github-coding-agent",
+  "purpose": {
+    "id": "github-code-change-pr",
+    "statement": "Prepare a code change on a task branch and submit it for human review as a pull request.",
+    "excludes": [
+      "repository administration",
+      "organization access",
+      "secret management",
+      "bypass of human review",
+      "merge authority"
+    ]
+  },
+  "identity_classes": {
+    "native": "human-developer",
+    "candidate": "github-coding-agent"
+  },
+  "required_effects": [
+    {
+      "id": "read-repo",
+      "description": "Read repository contents needed for the task.",
+      "min_permission": "Contents:read",
+      "probe": {
+        "method": "api-call",
+        "endpoint_family": "repository contents",
+        "success_criterion": "contents readable"
+      }
+    },
+    {
+      "id": "create-branch",
+      "description": "Create a task-specific branch in the designated repository.",
+      "min_permission": "Contents:write",
+      "probe": {
+        "method": "api-call",
+        "endpoint_family": "git refs (POST /repos/{owner}/{repo}/git/refs)",
+        "success_criterion": "task branch ref created"
+      }
+    },
+    {
+      "id": "modify-allowed-files",
+      "description": "Write task-scoped source changes to allowed paths.",
+      "min_permission": "Contents:write",
+      "probe": {
+        "method": "api-call",
+        "endpoint_family": "git blobs/trees/commits or contents",
+        "success_criterion": "allowed file modified on task branch"
+      }
+    },
+    {
+      "id": "commit-changes",
+      "description": "Create commits for the task-scoped changes.",
+      "min_permission": "Contents:write",
+      "probe": {
+        "method": "api-call",
+        "endpoint_family": "git commits + refs update",
+        "success_criterion": "commit reachable on task branch"
+      }
+    },
+    {
+      "id": "open-pull-request",
+      "description": "Open or update a pull request exposing the change to human review.",
+      "min_permission": "Pull requests:write",
+      "probe": {
+        "method": "api-call",
+        "endpoint_family": "POST /repos/{owner}/{repo}/pulls",
+        "success_criterion": "pull request created and open for review"
+      }
+    }
+  ],
+  "prohibited_effects": [
+    {
+      "id": "administer-repo-settings",
+      "description": "Change repository settings.",
+      "enforced_by": "profile",
+      "reason_profile_blocks": "no Administration permission granted",
+      "destructive": true,
+      "probe": {
+        "method": "authorization-check",
+        "endpoint_family": "repository administration",
+        "block_criterion": "403/insufficient scope without mutation attempted"
+      }
+    },
+    {
+      "id": "change-branch-protection",
+      "description": "Alter branch protection controls.",
+      "enforced_by": "profile",
+      "reason_profile_blocks": "no Administration permission granted",
+      "destructive": true,
+      "probe": {
+        "method": "authorization-check",
+        "endpoint_family": "branch protection administration",
+        "block_criterion": "403/insufficient scope without mutation attempted"
+      }
+    },
+    {
+      "id": "read-secrets",
+      "description": "Read repository or organization secrets.",
+      "enforced_by": "profile",
+      "reason_profile_blocks": "no Secrets permission granted",
+      "destructive": false,
+      "probe": {
+        "method": "authorization-check",
+        "endpoint_family": "actions/dependabot secrets",
+        "block_criterion": "403/insufficient scope"
+      }
+    },
+    {
+      "id": "add-collaborators",
+      "description": "Add repository collaborators.",
+      "enforced_by": "profile",
+      "reason_profile_blocks": "no Administration permission granted",
+      "destructive": true,
+      "probe": {
+        "method": "authorization-check",
+        "endpoint_family": "repository collaborators administration",
+        "block_criterion": "403/insufficient scope without mutation attempted"
+      }
+    },
+    {
+      "id": "merge-without-approval",
+      "description": "Merge the pull request without the required human approval.",
+      "enforced_by": "external_condition",
+      "reason_external_blocks": "branch protection requiring at least one approving review; the candidate profile alone (Pull requests:write) would otherwise permit the merge endpoint",
+      "external_condition_id": "branch-protection-required-review",
+      "destructive": true,
+      "probe": {
+        "method": "authorization-check",
+        "endpoint_family": "PUT /repos/{owner}/{repo}/pulls/{n}/merge",
+        "block_criterion": "405/branch protection rejects merge without required review; no forced merge attempted"
+      }
+    },
+    {
+      "id": "delete-repository",
+      "description": "Delete the repository.",
+      "enforced_by": "profile",
+      "reason_profile_blocks": "no Administration permission granted",
+      "destructive": true,
+      "probe": {
+        "method": "authorization-check",
+        "endpoint_family": "DELETE /repos/{owner}/{repo}",
+        "block_criterion": "403/insufficient scope; DELETE MUST NOT be executed against a live repository"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "designated-repository-only",
+      "description": "All effects are scoped to the single designated test repository.",
+      "enforced_by": "profile",
+      "detail": "repository selection limited to the designated repository"
+    },
+    {
+      "id": "branch-protection-required-review",
+      "description": "Merge to the protected branch requires at least one human approving review.",
+      "enforced_by": "external_condition",
+      "detail": "branch protection is configured on the target branch and is not controllable by the candidate profile"
+    },
+    {
+      "id": "human-review-required",
+      "description": "The declared purpose ends at 'submitted for human review'; merge authority is out of scope.",
+      "enforced_by": "external_condition",
+      "detail": "review/approval workflow is an organizational configuration, not a permission held by the candidate"
+    }
+  ],
+  "destructive_test_policy": {
+    "rule": "Destructive prohibited effects MUST be proven via authorization/permission response on a disposable test repository, never by executing the destructive mutation.",
+    "forbidden_live_actions": [
+      "actual repository deletion",
+      "actual branch-protection removal",
+      "actual settings mutation",
+      "actual collaborator addition"
+    ]
+  }
+}
