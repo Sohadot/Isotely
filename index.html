@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en" data-phase="foundation">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isotely — Purpose-bounded operational parity across unlike identity classes</title>
+<meta name="description" content="Isotely is purpose-bounded operational parity across unlike identity classes. Different permissions, same declared purpose — the relation between them is Isotely. A governed conceptual reference asset by Sohadot.">
+<!-- Foundation phase: the reference interface is built but not yet approved for publication (see domain-dossier Foundation Gate). Kept out of indexes until that gate is passed. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://isotely.com/">
+<meta name="theme-color" content="#f6f2ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181a" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Isotely">
+<meta property="og:title" content="Isotely — the relation between unlike identities under a declared purpose">
+<meta property="og:description" content="Different permissions. Same declared purpose. The relation between them is Isotely: purpose-bounded operational parity across unlike identity classes.">
+<meta property="og:url" content="https://isotely.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Isotely — purpose-bounded operational parity across unlike identity classes">
+<meta name="twitter:description" content="Equivalent operational effect does not require permission equality. A governed conceptual reference asset by Sohadot.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DefinedTerm",
+  "name": "Isotely",
+  "description": "Purpose-bounded operational parity across unlike identity classes: the condition in which a non-native identity can receive functionally equivalent operational treatment for a declared purpose without inheriting the native identity's unrestricted privileges.",
+  "inDefinedTermSet": {
+    "@type": "DefinedTermSet",
+    "name": "Isotely — Category Reference",
+    "url": "https://github.com/Sohadot/Isotely"
+  }
+}
+</script>
+<style>
+  :root{
+    /* ---- canvas & ink ---- */
+    --paper:#f6f2ea;
+    --paper-2:#efe8db;
+    --paper-3:#e8e0d1;
+    --ink:#1b2320;
+    --ink-soft:#4b544f;
+    --ink-faint:#7c847e;
+    /* ---- primary dark / accents ---- */
+    --teal:#1f4b47;
+    --teal-2:#2c665f;
+    --bronze:#8f6234;
+    --green:#546d5b;
+    /* ---- evidence semantic states ---- */
+    --state-documented:#2c665f;   /* teal — recorded / reachable */
+    --state-pending:#8f6234;      /* bronze — pending / not yet done */
+    --state-none:#8a908a;         /* muted — none / not granted */
+    --state-false:#8c4a3f;        /* clay — false / not equal (factual, not alarm) */
+    --state-held:#1f4b47;         /* deep teal — boundary held / excluded-by-design */
+    /* ---- lines & fields ---- */
+    --line:rgba(27,35,32,.14);
+    --line-2:rgba(27,35,32,.24);
+    --field:rgba(31,75,71,.05);
+    /* ---- type ---- */
+    --serif:"Iowan Old Style",Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
+    /* ---- scale ---- */
+    --measure:66rem;
+    --gutter:clamp(1rem,5vw,2.5rem);
+    --s-1:.5rem; --s-2:1rem; --s-3:1.5rem; --s-4:2.5rem; --s-5:4rem; --s-6:6.5rem;
+    --radius:3px;
+    --dur:.55s;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#14181a;
+      --paper-2:#1a1f20;
+      --paper-3:#20272a;
+      --ink:#e9e3d6;
+      --ink-soft:#b3b7ae;
+      --ink-faint:#868c85;
+      --teal:#4f9c92;
+      --teal-2:#63b3a8;
+      --bronze:#c79a5f;
+      --green:#7fa088;
+      --state-documented:#63b3a8;
+      --state-pending:#c79a5f;
+      --state-none:#8a908a;
+      --state-false:#cd8477;
+      --state-held:#63b3a8;
+      --line:rgba(233,227,214,.15);
+      --line-2:rgba(233,227,214,.26);
+      --field:rgba(99,179,168,.07);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#14181a; --paper-2:#1a1f20; --paper-3:#20272a;
+    --ink:#e9e3d6; --ink-soft:#b3b7ae; --ink-faint:#868c85;
+    --teal:#4f9c92; --teal-2:#63b3a8; --bronze:#c79a5f; --green:#7fa088;
+    --state-documented:#63b3a8; --state-pending:#c79a5f; --state-none:#8a908a;
+    --state-false:#cd8477; --state-held:#63b3a8;
+    --line:rgba(233,227,214,.15); --line-2:rgba(233,227,214,.26); --field:rgba(99,179,168,.07);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:clamp(1rem,.96rem + .2vw,1.075rem);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:rgba(31,75,71,.16)}
+  a{color:inherit}
+  h1,h2,h3{font-weight:normal;margin:0}
+  p{margin:0}
+
+  .wrap{max-width:var(--measure);margin-inline:auto;padding-inline:var(--gutter)}
+  .wrap-wide{max-width:82rem;margin-inline:auto;padding-inline:var(--gutter)}
+  .serif{font-family:var(--serif)}
+  .mono{font-family:var(--mono)}
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:0 0 var(--s-2);
+    display:flex;align-items:center;gap:.7rem;
+  }
+  .eyebrow::before{content:"";width:1.6rem;height:1px;background:var(--line-2)}
+
+  section{position:relative;padding-block:var(--s-6)}
+  .rule{border:0;height:1px;background:var(--line);margin:0}
+
+  /* ---------------- skip link ---------------- */
+  .skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:.6rem 1rem;z-index:100;border-radius:0 0 var(--radius) 0}
+  .skip:focus{left:0}
+
+  /* ---------------- top bar ---------------- */
+  .topbar{
+    position:sticky;top:0;z-index:40;
+    backdrop-filter:saturate(120%) blur(8px);
+    background:color-mix(in srgb,var(--paper) 86%,transparent);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.85rem}
+  .brand{font-family:var(--serif);font-size:1.02rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none}
+  .brand b{font-weight:600}
+  .topnav{display:flex;gap:1.4rem;font-size:.82rem;font-family:var(--mono);letter-spacing:.02em}
+  .topnav a{color:var(--ink-soft);text-decoration:none;padding-block:.2rem;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+  .topnav a:hover,.topnav a:focus-visible{color:var(--ink);border-color:var(--line-2)}
+  @media (max-width:780px){.topnav{display:none}}
+
+  /* ---------------- hero ---------------- */
+  .hero{padding-top:clamp(3rem,7vw,5.5rem);padding-bottom:var(--s-5)}
+  .hero-name{
+    font-family:var(--serif);
+    font-weight:600;
+    line-height:.92;
+    letter-spacing:-.01em;
+    font-size:clamp(3.4rem,15vw,10rem);
+    margin:0;
+  }
+  .hero-name .dot{color:var(--teal)}
+  .hero-lede{
+    font-family:var(--serif);
+    font-size:clamp(1.5rem,1.1rem + 1.9vw,2.5rem);
+    line-height:1.22;
+    margin-top:var(--s-4);
+    max-width:24ch;
+    color:var(--ink);
+  }
+  .hero-lede .muted{color:var(--ink-faint)}
+  .hero-relation{
+    font-family:var(--serif);
+    font-size:clamp(1.15rem,1rem + .7vw,1.5rem);
+    line-height:1.4;
+    margin-top:var(--s-3);
+    max-width:34ch;
+    color:var(--ink-soft);
+  }
+  .hero-relation em{font-style:normal;color:var(--teal);font-weight:600}
+  .hero-def{
+    margin-top:var(--s-4);
+    padding-top:var(--s-3);
+    border-top:1px solid var(--line);
+    max-width:42ch;
+    font-size:1rem;
+  }
+  .hero-def .k{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:.4rem}
+
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr;gap:var(--s-4)}}
+
+  /* ---------------- hero instrument ---------------- */
+  .instrument{
+    border:1px solid var(--line-2);
+    background:linear-gradient(180deg,var(--paper-2),var(--paper));
+    padding:clamp(1.2rem,3vw,2rem);
+    position:relative;
+  }
+  .instrument-cap{
+    font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-faint);display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.3rem;
+  }
+  .actors{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .actor{border:1px solid var(--line);padding:.9rem 1rem;background:var(--paper)}
+  .actor h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 .55rem}
+  .actor .cls{font-family:var(--serif);font-size:1.12rem;line-height:1.2;margin-bottom:.7rem}
+  .surface{height:6px;background:var(--paper-3);border-radius:99px;overflow:hidden;position:relative}
+  .surface > i{display:block;height:100%;background:var(--teal);border-radius:99px;transform-origin:left;transition:transform var(--dur) var(--ease)}
+  .actor .lab{font-family:var(--mono);font-size:.66rem;color:var(--ink-faint);margin-top:.45rem;letter-spacing:.04em}
+  .converge{
+    text-align:center;margin:1.15rem 0 0;position:relative;
+  }
+  .converge svg{display:block;width:100%;height:44px}
+  .converge svg path{stroke:var(--line-2);stroke-width:1.25;fill:none}
+  .converge svg path.flow{stroke:var(--teal);stroke-width:1.5;stroke-dasharray:5 6}
+  .purpose{
+    text-align:center;border:1px solid var(--teal);color:var(--teal);
+    background:var(--field);padding:.7rem 1rem;margin-top:.3rem;
+  }
+  .purpose .k{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:.25rem}
+  .purpose .v{font-family:var(--serif);font-size:1.05rem}
+  .verdict-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.15rem}
+  .chip{
+    font-family:var(--mono);font-size:.66rem;letter-spacing:.05em;
+    border:1px solid var(--line-2);padding:.4rem .6rem;display:inline-flex;gap:.5rem;align-items:center;
+    background:var(--paper);
+  }
+  .chip b{font-weight:600}
+  .chip.false{color:var(--state-false);border-color:color-mix(in srgb,var(--state-false) 45%,var(--line-2))}
+  .chip.cond{color:var(--bronze);border-color:color-mix(in srgb,var(--bronze) 45%,var(--line-2))}
+  .dotmark{width:7px;height:7px;border-radius:99px;background:currentColor;flex:none}
+
+  /* ---------------- generic section heads ---------------- */
+  .h-lead{font-family:var(--serif);font-size:clamp(1.9rem,1.4rem + 1.8vw,3rem);line-height:1.1;letter-spacing:-.01em;max-width:20ch}
+  .h-sub{margin-top:var(--s-3);max-width:60ch;color:var(--ink-soft);font-size:1.08rem}
+  .lead-quote{font-family:var(--serif);font-size:clamp(1.5rem,1.2rem + 1.3vw,2.2rem);line-height:1.28;max-width:28ch}
+  .lead-quote em{font-style:italic;color:var(--teal)}
+
+  .two{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(2rem,5vw,4.5rem);align-items:start}
+  .two>*,.hero-grid>*,.effgrid>*,.cite-grid>*,.pf-col{min-width:0}
+  @media (max-width:840px){.two{grid-template-columns:minmax(0,1fr);gap:var(--s-4)}}
+
+  .prose p + p{margin-top:1.05rem}
+  .prose p{color:var(--ink-soft)}
+  .prose strong{color:var(--ink);font-weight:600}
+
+  /* ---------------- origin / provenance ---------------- */
+  .origin{background:var(--paper-2);border-block:1px solid var(--line)}
+  .greek{
+    font-family:var(--serif);font-size:clamp(3rem,4vw + 1rem,5.5rem);
+    line-height:1;color:var(--teal);letter-spacing:.02em;
+  }
+  .greek small{display:block;font-size:.9rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-faint);font-family:var(--mono);margin-top:.9rem}
+  .restraint{
+    border-left:2px solid var(--bronze);padding:.2rem 0 .2rem 1.1rem;margin-top:var(--s-3);
+    color:var(--ink-soft);font-size:.98rem;
+  }
+  .restraint b{color:var(--ink);font-weight:600}
+  .transition-line{
+    font-family:var(--serif);font-size:clamp(1.4rem,1.1rem + 1.1vw,2rem);line-height:1.3;
+    margin-top:var(--s-4);padding-top:var(--s-4);border-top:1px solid var(--line);
+  }
+  .transition-line .a{color:var(--ink-faint)}
+  .transition-line .b{color:var(--teal)}
+
+  /* ---------------- structural analogy ---------------- */
+  .analogy{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(1rem,3vw,2.5rem);align-items:center;margin-top:var(--s-4)}
+  @media (max-width:760px){.analogy{grid-template-columns:1fr;gap:var(--s-3)}.analogy .vs{transform:rotate(90deg)}}
+  .struct{border:1px solid var(--line-2);padding:1.4rem;background:var(--paper)}
+  .struct.modern{border-color:var(--teal);background:var(--field)}
+  .struct .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1rem}
+  .struct.modern .tag{color:var(--teal)}
+  .step{font-family:var(--serif);font-size:1.15rem;line-height:1.3}
+  .step + .step{margin-top:.75rem;padding-top:.75rem;border-top:1px dashed var(--line)}
+  .step .arrow{display:block;color:var(--ink-faint);font-size:.9rem;margin:.35rem 0}
+  .vs{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:var(--ink-faint);text-align:center;text-transform:uppercase}
+  .analogy-note{margin-top:var(--s-3);font-size:.9rem;color:var(--ink-faint);font-family:var(--mono);letter-spacing:.02em}
+
+  /* ---------------- framework path ---------------- */
+  .path{margin-top:var(--s-5);position:relative}
+  .principle{
+    display:grid;grid-template-columns:auto 1fr;gap:clamp(1rem,3vw,2.2rem);
+    padding-block:var(--s-3);position:relative;
+  }
+  .principle + .principle{border-top:1px solid var(--line)}
+  .principle .idx{
+    font-family:var(--mono);font-size:.8rem;color:var(--teal);letter-spacing:.05em;
+    padding-top:.35rem;position:relative;
+  }
+  .principle .idx::after{content:"";position:absolute;left:.55rem;top:2rem;bottom:-1.5rem;width:1px;background:var(--line)}
+  .principle:last-child .idx::after{display:none}
+  .principle h3{font-family:var(--serif);font-size:clamp(1.2rem,1rem + .6vw,1.5rem);line-height:1.25;margin-bottom:.45rem}
+  .principle p{color:var(--ink-soft);font-size:.99rem;max-width:60ch}
+  .govern{
+    margin-top:var(--s-5);text-align:center;font-family:var(--serif);
+    font-size:clamp(1.4rem,1.1rem + 1.2vw,2rem);line-height:1.35;
+  }
+  .govern em{font-style:italic;color:var(--teal)}
+
+  /* ---------------- missing relation ---------------- */
+  .relations{border:1px solid var(--line-2);margin-top:var(--s-4)}
+  .rel-row{display:grid;grid-template-columns:14rem 1fr;gap:1rem;padding:1.15rem clamp(1rem,3vw,1.8rem);align-items:baseline}
+  .rel-row + .rel-row{border-top:1px solid var(--line)}
+  .rel-row .term{font-family:var(--serif);font-size:1.25rem}
+  .rel-row .q{color:var(--ink-soft)}
+  .rel-row.isotely{background:var(--field)}
+  .rel-row.isotely .term{color:var(--teal);font-weight:600}
+  .rel-row.isotely .q{color:var(--ink)}
+  @media (max-width:640px){.rel-row{grid-template-columns:1fr;gap:.3rem}}
+
+  /* ---------------- parity field (signature) ---------------- */
+  .pf{border:1px solid var(--line-2);margin-top:var(--s-4);background:var(--paper-2)}
+  .pf-head{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;padding:1.1rem clamp(1rem,3vw,1.6rem);border-bottom:1px solid var(--line)}
+  .pf-modes{display:inline-flex;border:1px solid var(--line-2);background:var(--paper);border-radius:99px;padding:3px}
+  .pf-modes button{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
+    border:0;background:transparent;color:var(--ink-soft);padding:.5rem .9rem;border-radius:99px;cursor:pointer;
+    transition:background .25s,color .25s;
+  }
+  .pf-modes button[aria-pressed="true"]{background:var(--teal);color:var(--paper)}
+  .pf-modes button:focus-visible{outline:2px solid var(--bronze);outline-offset:2px}
+  .pf-state{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--ink-faint)}
+
+  .pf-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .pf-col{padding:clamp(1rem,3vw,1.6rem)}
+  .pf-col + .pf-col{border-left:1px solid var(--line)}
+  .pf-col h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 .2rem}
+  .pf-col .cls{font-family:var(--serif);font-size:1.3rem;margin-bottom:.2rem}
+  .pf-col .role{font-family:var(--mono);font-size:.66rem;color:var(--ink-faint);letter-spacing:.03em;margin-bottom:1rem}
+  .pf-list{list-style:none;margin:0;padding:0}
+  .pf-list li{
+    display:grid;grid-template-columns:auto 1fr;gap:.6rem;align-items:baseline;
+    font-family:var(--mono);font-size:.8rem;padding:.4rem 0;border-top:1px solid var(--line);
+    color:var(--ink-soft);
+  }
+  .pf-list li:first-child{border-top:0}
+  .pf-list li .mk{font-size:.7rem;letter-spacing:0;white-space:nowrap}
+  .mk.w{color:var(--state-documented)} .mk.r{color:var(--state-documented)}
+  .mk.none{color:var(--state-none)} .mk.held{color:var(--state-held)} .mk.broad{color:var(--state-false)}
+  .pf-foot{border-top:1px solid var(--line);padding:1.1rem clamp(1rem,3vw,1.6rem);display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;align-items:center;justify-content:space-between}
+  .pf-verdicts{display:flex;flex-wrap:wrap;gap:.5rem}
+  .pf-note{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);max-width:44ch;line-height:1.5}
+  @media (max-width:640px){.pf-grid{grid-template-columns:1fr}.pf-col + .pf-col{border-left:0;border-top:1px solid var(--line)}}
+
+  /* hidden effect rows toggled by mode */
+  .only-effect{display:none}
+  .pf[data-mode="effect"] .only-surface{display:none}
+  .pf[data-mode="effect"] .only-effect{display:grid}
+
+  /* ---------------- evidence ledger (RC-001) ---------------- */
+  .rc-head{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:flex-end}
+  .purpose-box{border:1px solid var(--teal);background:var(--field);padding:1.1rem 1.3rem;margin-top:var(--s-3)}
+  .purpose-box .k{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:.4rem}
+  .purpose-box .v{font-family:var(--serif);font-size:1.25rem;line-height:1.35}
+  .effgrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.2rem,3vw,2.2rem);margin-top:var(--s-4)}
+  @media (max-width:720px){.effgrid{grid-template-columns:1fr}}
+  .efflist{border:1px solid var(--line-2)}
+  .efflist header{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.7rem 1rem;border-bottom:1px solid var(--line-2)}
+  .efflist.req header{color:var(--state-documented)}
+  .efflist.pro header{color:var(--state-held)}
+  .efflist ul{list-style:none;margin:0;padding:0}
+  .efflist li{display:grid;grid-template-columns:auto 1fr;gap:.6rem;padding:.55rem 1rem;font-size:.92rem;color:var(--ink-soft)}
+  .efflist li + li{border-top:1px solid var(--line)}
+  .efflist li .mk{font-family:var(--mono);font-size:.7rem}
+
+  .ledger{width:100%;border-collapse:collapse;margin-top:var(--s-4);font-size:.92rem}
+  .ledger caption{text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);padding-bottom:.7rem}
+  .ledger th,.ledger td{text-align:left;padding:.75rem .9rem;border-bottom:1px solid var(--line);vertical-align:top}
+  .ledger th{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:400}
+  .ledger td:first-child{color:var(--ink);font-weight:500}
+  .st{font-family:var(--mono);font-size:.72rem;letter-spacing:.03em;display:inline-flex;align-items:center;gap:.45rem;white-space:nowrap}
+  .st .dotmark{width:7px;height:7px}
+  .st.documented{color:var(--state-documented)}
+  .st.pending{color:var(--state-pending)}
+  .st.none{color:var(--state-none)}
+  .st.false{color:var(--state-false)}
+  .st.held{color:var(--state-held)}
+  @media (max-width:560px){
+    .ledger{font-size:.82rem}
+    .ledger th,.ledger td{padding:.6rem .5rem}
+    .ledger caption{font-size:.62rem}
+  }
+
+  /* ---------------- falsifiability ---------------- */
+  .falsify{background:var(--paper-2);border-block:1px solid var(--line)}
+  .fcard{border:1px solid var(--line-2);padding:1.5rem;background:var(--paper)}
+  .fcard + .fcard{margin-top:var(--s-3)}
+  .fcard .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bronze);margin-bottom:.7rem}
+  .fcard p{color:var(--ink-soft)}
+  .fcard strong{color:var(--ink);font-weight:600}
+
+  /* ---------------- IPP ---------------- */
+  .code{
+    font-family:var(--mono);font-size:.82rem;line-height:1.7;
+    background:#161c1b;color:#e9e3d6;border:1px solid var(--line-2);
+    padding:1.3rem 1.4rem;overflow-x:auto;border-radius:var(--radius);
+    margin-top:var(--s-3);max-width:100%;
+  }
+  .code .c{color:#8a908a}
+  .code .key{color:#8fc7bd}
+  .code .str{color:#d3a86a}
+  .code .null{color:#c78c7f}
+  .maturity{display:inline-flex;gap:.5rem;align-items:center;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;border:1px solid var(--bronze);color:var(--bronze);padding:.35rem .65rem;margin-top:var(--s-2)}
+
+  /* ---------------- inspected / cited ---------------- */
+  .cite{background:#161c1b;color:#f6f2ea}
+  .cite .h-lead{color:#f6f2ea}
+  .cite .eyebrow{color:rgba(246,242,234,.55)}
+  .cite .eyebrow::before{background:rgba(246,242,234,.28)}
+  .cite-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,4vw,3rem);margin-top:var(--s-4)}
+  @media (max-width:760px){.cite-grid{grid-template-columns:1fr}}
+  .cite-card{border:1px solid rgba(246,242,234,.2);padding:1.5rem}
+  .cite-card h3{font-family:var(--serif);font-size:1.5rem;margin-bottom:.3rem}
+  .cite-card .role{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(246,242,234,.55);margin-bottom:1rem}
+  .cite-card ul{list-style:none;margin:0 0 1.1rem;padding:0;font-size:.92rem;color:rgba(246,242,234,.8)}
+  .cite-card li{padding:.28rem 0;padding-left:1.1rem;position:relative}
+  .cite-card li::before{content:"";position:absolute;left:0;top:.85em;width:.5rem;height:1px;background:var(--teal-2)}
+  .link{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.78rem;letter-spacing:.03em;color:#f6f2ea;text-decoration:none;border-bottom:1px solid var(--teal-2);padding-bottom:2px;transition:gap .2s,border-color .2s}
+  .link:hover,.link:focus-visible{gap:.8rem;border-color:#f6f2ea}
+  .link.pending{color:rgba(246,242,234,.5);border-bottom-style:dashed;pointer-events:none;cursor:default}
+  .cite-hierarchy{margin-top:var(--s-4);padding-top:var(--s-3);border-top:1px solid rgba(246,242,234,.2);font-family:var(--serif);font-size:clamp(1.05rem,1rem + .5vw,1.3rem);color:rgba(246,242,234,.85);line-height:1.5}
+  .cite-hierarchy b{color:var(--teal-2);font-weight:600}
+
+  /* ---------------- steward / footer ---------------- */
+  .steward{text-align:center}
+  .steward .mark{font-family:var(--serif);font-size:clamp(2rem,1.5rem + 2vw,3.2rem);line-height:1.1}
+  .steward p{max-width:52ch;margin-inline:auto;margin-top:var(--s-3);color:var(--ink-soft)}
+  .steward .a-line{margin-top:var(--s-3);font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+
+  footer{border-top:1px solid var(--line);padding-block:var(--s-4)}
+  .foot-grid{display:flex;flex-wrap:wrap;gap:1rem 2rem;justify-content:space-between;align-items:center}
+  .foot-links{display:flex;flex-wrap:wrap;gap:1.1rem;font-family:var(--mono);font-size:.76rem}
+  .foot-links a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+  .foot-links a:hover,.foot-links a:focus-visible{color:var(--ink);border-color:var(--line-2)}
+  .foot-meta{font-family:var(--mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.02em;line-height:1.7}
+  .status-note{
+    display:inline-flex;gap:.5rem;align-items:center;font-family:var(--mono);font-size:.68rem;
+    letter-spacing:.04em;color:var(--ink-faint);border:1px solid var(--line);padding:.35rem .6rem;
+  }
+
+  a.inline{color:var(--teal);text-decoration:none;border-bottom:1px solid var(--line-2);transition:border-color .2s}
+  a.inline:hover,a.inline:focus-visible{border-color:var(--teal)}
+
+  :focus-visible{outline:2px solid var(--bronze);outline-offset:3px}
+
+  /* ---------------- reveal animation ---------------- */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    *{scroll-behavior:auto !important}
+    .reveal{opacity:1;transform:none;transition:none}
+    .converge svg path.flow{stroke-dasharray:none}
+    .surface > i{transition:none}
+    .pf-modes button,.link,.topnav a{transition:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap-wide inner">
+    <a class="brand" href="#top"><b>Isotely</b></a>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#origin">Origin</a>
+      <a href="#framework">Framework</a>
+      <a href="#relation">Relation</a>
+      <a href="#parity">Parity&nbsp;Field</a>
+      <a href="#rc001">RC-001</a>
+      <a href="#falsify">Falsifiability</a>
+      <a href="#cite">Inspect</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<a id="top"></a>
+
+<!-- ============================== A. HERO ============================== -->
+<section class="hero wrap-wide" aria-labelledby="hero-name">
+  <div class="hero-grid">
+    <div>
+      <h1 class="hero-name" id="hero-name">Isotely<span class="dot">.</span></h1>
+      <p class="hero-lede">Different permissions.<br>Same declared purpose.</p>
+      <p class="hero-relation">The relation between them is <em>Isotely</em>.</p>
+      <div class="hero-def">
+        <span class="k">Canonical definition</span>
+        Purpose-bounded operational parity across unlike identity classes.
+      </div>
+    </div>
+
+    <!-- hero instrument: the relation, not a claim of live evidence -->
+    <div class="instrument reveal" aria-label="The Isotely relation, illustrated">
+      <div class="instrument-cap">
+        <span>The relation</span>
+        <span>Illustrative</span>
+      </div>
+      <div class="actors">
+        <div class="actor">
+          <h4>Native identity</h4>
+          <div class="cls">Human developer</div>
+          <div class="surface"><i style="transform:scaleX(1)"></i></div>
+          <div class="lab">broad authority surface</div>
+        </div>
+        <div class="actor">
+          <h4>Non-native identity</h4>
+          <div class="cls">Coding agent</div>
+          <div class="surface"><i style="transform:scaleX(.34)"></i></div>
+          <div class="lab">bounded authority surface</div>
+        </div>
+      </div>
+      <div class="converge" aria-hidden="true">
+        <svg viewBox="0 0 300 44" preserveAspectRatio="none">
+          <path d="M60 2 C60 26, 150 20, 150 42"></path>
+          <path d="M240 2 C240 26, 150 20, 150 42"></path>
+          <path class="flow" d="M60 2 C60 26, 150 20, 150 42"></path>
+          <path class="flow" d="M240 2 C240 26, 150 20, 150 42"></path>
+        </svg>
+      </div>
+      <div class="purpose">
+        <span class="k">Declared purpose</span>
+        <span class="v">modify code · open a pull request · request human review</span>
+      </div>
+      <div class="verdict-row">
+        <span class="chip false"><span class="dotmark"></span>Permission sets&nbsp;<b>NOT EQUAL</b></span>
+        <span class="chip cond"><span class="dotmark"></span>Operational parity&nbsp;<b>candidate</b></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================== B. ORIGIN ============================== -->
+<section class="origin" id="origin" aria-labelledby="origin-h">
+  <div class="wrap">
+    <p class="eyebrow">The origin of the name</p>
+    <div class="two">
+      <div>
+        <p class="greek">ἰσοτέλεια<small>isoteleia</small></p>
+        <div class="restraint">
+          <p>The name derives from the historical Greek concept <em>isoteleia</em>, associated with <strong>equal taxation or fiscal treatment</strong> granted to certain non-citizens — especially metics — relative to citizens in ancient Athens.</p>
+        </div>
+      </div>
+      <div class="prose">
+        <h2 class="h-lead" id="origin-h">An old word for bounded equivalence. A new problem of digital identity.</h2>
+        <p style="margin-top:var(--s-3)">The historical evidence does <strong>not</strong> justify describing this as full citizenship or universal equal rights. Ancient law did not anticipate machine identity, and Isotely makes no such claim.</p>
+        <p>What carries forward is a <strong>structural idea</strong>: difference of status did not require identity of status for bounded, equivalent treatment.</p>
+        <p class="transition-line">
+          <span class="a">Different status did not require identical status for bounded equivalent treatment.</span><br>
+          <span class="b">Different identity does not require identical permission for bounded operational parity.</span>
+        </p>
+        <p style="margin-top:var(--s-3);font-size:.9rem;color:var(--ink-faint)">Isotely does not import ancient civic status into software. It carries forward one structural relation: difference of class does not prevent equivalence of treatment within a defined boundary. Scholarly sources identified for verification include the University of Milan <em>Politeia</em> Lexicon of Citizenship and the Academy of Athens DYAS Humanities Thesaurus; the precise scope of non-fiscal rights is deliberately left open.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== C. STRUCTURE → IDENTITY ============================== -->
+<section class="wrap" id="structure" aria-labelledby="struct-h">
+  <p class="eyebrow">From status to identity</p>
+  <h2 class="h-lead" id="struct-h">The same structure, two thousand years apart.</h2>
+  <div class="analogy">
+    <div class="struct">
+      <div class="tag">Ancient structure</div>
+      <div class="step">unlike civic status
+        <span class="arrow">↓</span>
+      </div>
+      <div class="step">bounded equivalent treatment
+        <span class="arrow">↓</span>
+      </div>
+      <div class="step">without full status identity</div>
+    </div>
+    <div class="vs" aria-hidden="true">analogy<br>·<br>not continuity</div>
+    <div class="struct modern">
+      <div class="tag">Modern structure</div>
+      <div class="step">unlike identity classes
+        <span class="arrow">↓</span>
+      </div>
+      <div class="step">purpose-bounded operational parity
+        <span class="arrow">↓</span>
+      </div>
+      <div class="step">without permission identity</div>
+    </div>
+  </div>
+  <p class="analogy-note">This is a structural analogy, not a claim of historical continuity between ancient fiscal status and modern access control.</p>
+</section>
+
+<hr class="rule">
+
+<!-- ============================== D. FRAMEWORK ============================== -->
+<section class="wrap" id="framework" aria-labelledby="fw-h">
+  <p class="eyebrow">The Isotely framework</p>
+  <h2 class="h-lead" id="fw-h">Eight principles that hold a parity claim together.</h2>
+  <p class="h-sub">Isotely is not a slogan but a structure. Each principle constrains what may be claimed, and each is drawn from the governed doctrine — not written for this page.</p>
+
+  <div class="path">
+    <div class="principle reveal">
+      <div class="idx">P1</div>
+      <div><h3>Identity classes may differ</h3><p>Parity does not require the native and non-native actors to belong to the same identity class.</p></div>
+    </div>
+    <div class="principle reveal">
+      <div class="idx">P2</div>
+      <div><h3>Purpose is mandatory</h3><p>There is no valid claim of Isotely without a declared purpose. Equivalence in the abstract is too broad to mean anything.</p></div>
+    </div>
+    <div class="principle reveal">
+      <div class="idx">P3</div>
+      <div><h3>Operational effect outranks permission symmetry</h3><p>Different permission structures may produce the same allowed effect. The evaluation target is the declared effect set, not equality between entitlement lists.</p></div>
+    </div>
+    <div class="principle reveal">
+      <div class="idx">P4</div>
+      <div><h3>Privilege inheritance is not parity</h3><p>Copying a native actor's full privilege set into a non-native identity is not proof of Isotely. It may instead prove over-privilege.</p></div>
+    </div>
+    <div class="principle reveal">
+      <div class="idx">P5</div>
+      <div><h3>Prohibited effects are first-class</h3><p>A parity claim that lists only what the non-native identity must be able to do is incomplete. It must also specify effects that must remain impossible.</p></div>
+    </div>
+    <div class="principle reveal">
+      <div class="idx">P6</div>
+      <div><h3>Boundaries must be explicit</h3><p>Time, repository, environment, resource, action class, and review requirement may all define the parity envelope.</p></div>
+    </div>
+    <div class="principle reveal">
+      <div class="idx">P7</div>
+      <div><h3>Evidence is required</h3><p>A parity claim without evidence is an assertion, not a reference-grade result.</p></div>
+    </div>
+    <div class="principle reveal">
+      <div class="idx">P8</div>
+      <div><h3>Vocabulary remains revisable before 1.0</h3><p>The canonical definition is fixed for the foundation phase. Field names, mappings, and adjacent terminology stay provisional and may change under authoritative external vocabulary — without silently altering the canonical concept.</p></div>
+    </div>
+  </div>
+
+  <p class="govern">Parity is not sameness.<br>It is equivalence under <em>purpose</em>, <em>boundary</em>, and <em>evidence</em>.</p>
+</section>
+
+<hr class="rule">
+
+<!-- ============================== E. THE MISSING RELATION ============================== -->
+<section class="wrap" id="relation" aria-labelledby="rel-h">
+  <p class="eyebrow">The missing relation</p>
+  <h2 class="h-lead" id="rel-h">Every layer answers a question. Isotely asks the one left over.</h2>
+  <p class="h-sub">Isotely is not another authorization layer. It is a relation between identity classes under a declared purpose — sitting alongside the questions the established layers already answer.</p>
+
+  <div class="relations">
+    <div class="rel-row"><div class="term">Identity</div><div class="q">Who is the actor?</div></div>
+    <div class="rel-row"><div class="term">Authentication</div><div class="q">Can it prove that identity?</div></div>
+    <div class="rel-row"><div class="term">Authorization</div><div class="q">What may it do?</div></div>
+    <div class="rel-row"><div class="term">Delegation</div><div class="q">On whose behalf or mandate may it act?</div></div>
+    <div class="rel-row"><div class="term">Least privilege</div><div class="q">What is the minimum authority this identity requires?</div></div>
+    <div class="rel-row isotely"><div class="term">Isotely</div><div class="q">Can an unlike identity be operationally equivalent for this declared purpose without inheriting unrestricted privilege?</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================== F. PARITY FIELD ============================== -->
+<section class="wrap" id="parity" aria-labelledby="pf-h">
+  <p class="eyebrow">The parity field · Reference Case 001</p>
+  <h2 class="h-lead" id="pf-h">Switch the lens. The permissions differ; the required effects align.</h2>
+  <p class="h-sub">One instrument, two readings of the same two actors. <strong>Permission surface</strong> shows what each identity is entitled to. <strong>Operational effect</strong> shows what the declared purpose requires of each. Nothing here is a live run.</p>
+
+  <div class="pf" id="parityField" data-mode="surface">
+    <div class="pf-head">
+      <div class="pf-modes" role="group" aria-label="Parity field lens">
+        <button type="button" data-mode="surface" aria-pressed="true">Permission surface</button>
+        <button type="button" data-mode="effect" aria-pressed="false">Operational effect</button>
+      </div>
+      <p class="pf-state" id="pfState" aria-live="polite">Reading: permission surface — what each identity is entitled to.</p>
+    </div>
+
+    <div class="pf-grid">
+      <!-- NATIVE -->
+      <div class="pf-col">
+        <h4>Native identity</h4>
+        <div class="cls">Human developer</div>
+        <div class="role">broad, multi-purpose authority</div>
+        <ul class="pf-list">
+          <!-- surface view -->
+          <li class="only-surface"><span class="mk broad">broad</span><span>Repository contents · read / write</span></li>
+          <li class="only-surface"><span class="mk broad">broad</span><span>Pull requests · write &amp; merge</span></li>
+          <li class="only-surface"><span class="mk broad">broad</span><span>Issues · read / write</span></li>
+          <li class="only-surface"><span class="mk broad">broad</span><span>Repository administration</span></li>
+          <li class="only-surface"><span class="mk broad">broad</span><span>Manage collaborators · branch protection</span></li>
+          <li class="only-surface"><span class="mk broad">broad</span><span>Secrets · workflows · other repositories</span></li>
+          <!-- effect view -->
+          <li class="only-effect"><span class="mk w">reaches</span><span>Read repository contents</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Create task branch</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Write task-scoped source changes</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Create commits</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Read issue / PR context</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Create / update a pull request</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Expose the change to human review</span></li>
+        </ul>
+      </div>
+      <!-- NON-NATIVE -->
+      <div class="pf-col">
+        <h4>Non-native identity</h4>
+        <div class="cls">Coding agent</div>
+        <div class="role">narrow, task-specific authority</div>
+        <ul class="pf-list">
+          <!-- surface view -->
+          <li class="only-surface"><span class="mk w">write</span><span>Contents · write (designated repository)</span></li>
+          <li class="only-surface"><span class="mk w">write</span><span>Pull requests · write</span></li>
+          <li class="only-surface"><span class="mk r">read</span><span>Issues · read (only if task requires)</span></li>
+          <li class="only-surface"><span class="mk none">none</span><span>Workflows · none</span></li>
+          <li class="only-surface"><span class="mk none">none</span><span>Administration · none</span></li>
+          <li class="only-surface"><span class="mk none">none</span><span>Secrets · none · merge not claimed</span></li>
+          <!-- effect view -->
+          <li class="only-effect"><span class="mk w">reaches</span><span>Read repository contents</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Create task branch</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Write task-scoped source changes</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Create commits</span></li>
+          <li class="only-effect"><span class="mk r">reaches</span><span>Read issue / PR context</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Create / update a pull request</span></li>
+          <li class="only-effect"><span class="mk held">held</span><span>Prohibited effects remain excluded</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pf-foot">
+      <div class="pf-verdicts">
+        <span class="chip false"><span class="dotmark"></span>Permission equality&nbsp;<b>FALSE</b></span>
+        <span class="chip cond"><span class="dotmark"></span>Operational parity&nbsp;<b>candidate</b></span>
+      </div>
+      <p class="pf-note" id="pfNote">Candidate: the permission-to-effect map is documented from public GitHub documentation. It is not yet executed. No live run has observed these effects.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================== G. CATEGORY DISTINCTION ============================== -->
+<section class="wrap" id="distinction" aria-labelledby="dist-h">
+  <p class="eyebrow">The collapse test</p>
+  <div class="two">
+    <div>
+      <h2 class="h-lead" id="dist-h">We tried to collapse the category.</h2>
+      <p class="h-sub">A distinction is only real if it resists being described entirely in existing terms. So Isotely is defined against its own anti-scope. If a proposed feature can be fully described as one of these — without reference to cross-class, purpose-bounded parity — it does not belong to the concept.</p>
+      <p style="margin-top:var(--s-3);font-size:.9rem;color:var(--ink-faint);font-family:var(--mono);letter-spacing:.02em">The formal external-terminology distinction test is governed by the Research Integration Protocol and remains in progress. No independent category adoption is claimed.</p>
+    </div>
+    <div>
+      <div class="relations" aria-label="Concepts Isotely is tested against">
+        <div class="rel-row"><div class="term" style="font-size:1.05rem">Authentication</div><div class="q">proving identity — not parity of effect</div></div>
+        <div class="rel-row"><div class="term" style="font-size:1.05rem">Authorization</div><div class="q">what one actor may do — not cross-class equivalence</div></div>
+        <div class="rel-row"><div class="term" style="font-size:1.05rem">Delegation</div><div class="q">acting on another's mandate — not independent parity</div></div>
+        <div class="rel-row"><div class="term" style="font-size:1.05rem">Least privilege</div><div class="q">minimum for one identity — not equivalence across two</div></div>
+        <div class="rel-row"><div class="term" style="font-size:1.05rem">Zero standing privilege</div><div class="q">removing standing access — not a purpose-bounded relation</div></div>
+        <div class="rel-row"><div class="term" style="font-size:1.05rem">Effective permissions</div><div class="q">what one identity resolves to — not a judged equivalence</div></div>
+        <div class="rel-row isotely"><div class="term" style="font-size:1.05rem">Isotely</div><div class="q"><strong>cross-class + explicit equivalence judgment under a declared purpose</strong></div></div>
+      </div>
+      <p style="margin-top:var(--s-3)">
+        <a class="inline mono" href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#category-boundary" style="font-size:.82rem">Inspect the full category boundary →</a>
+      </p>
+    </div>
+  </div>
+  <p class="analogy-note" style="margin-top:var(--s-4)">Result, as currently governed: the distinguishing relation is the combination of <span style="color:var(--teal)">cross-class</span> and an <span style="color:var(--teal)">explicit equivalence judgment</span>. The distinction survives the current collapse test — it is not a proven, adopted new category.</p>
+</section>
+
+<hr class="rule">
+
+<!-- ============================== H. REFERENCE CASE 001 ============================== -->
+<section class="wrap" id="rc001" aria-labelledby="rc-h">
+  <p class="eyebrow">Reference Case 001</p>
+  <div class="rc-head">
+    <h2 class="h-lead" id="rc-h">Human developer&nbsp;→&nbsp;GitHub coding agent.</h2>
+    <span class="status-note"><span class="dotmark" style="color:var(--state-pending)"></span>Foundation case · auditable from public GitHub docs</span>
+  </div>
+
+  <div class="purpose-box">
+    <span class="k">Declared purpose</span>
+    <span class="v">A coding agent may inspect one designated repository, modify source code on a working branch, commit those changes, and open or update a pull request for human review.</span>
+  </div>
+  <p style="margin-top:var(--s-2);font-size:.9rem;color:var(--ink-faint)">Deliberately excludes repository administration, unrestricted organization access, secret management, and bypass of human review.</p>
+
+  <div class="effgrid">
+    <div class="efflist req">
+      <header>Required effects — must be reachable</header>
+      <ul>
+        <li><span class="mk" style="color:var(--state-documented)">▸</span>Read repository contents needed for the task</li>
+        <li><span class="mk" style="color:var(--state-documented)">▸</span>Create or update a task-specific branch</li>
+        <li><span class="mk" style="color:var(--state-documented)">▸</span>Write task-scoped source changes</li>
+        <li><span class="mk" style="color:var(--state-documented)">▸</span>Create commits for those changes</li>
+        <li><span class="mk" style="color:var(--state-documented)">▸</span>Read issue / pull-request context when the task depends on it</li>
+        <li><span class="mk" style="color:var(--state-documented)">▸</span>Create or update a pull request</li>
+        <li><span class="mk" style="color:var(--state-documented)">▸</span>Expose the proposed change to human review</li>
+      </ul>
+    </div>
+    <div class="efflist pro">
+      <header>Prohibited effects — must remain impossible</header>
+      <ul>
+        <li><span class="mk" style="color:var(--state-held)">╳</span>Administer repository settings</li>
+        <li><span class="mk" style="color:var(--state-held)">╳</span>Modify organization membership</li>
+        <li><span class="mk" style="color:var(--state-held)">╳</span>Manage unrelated repositories</li>
+        <li><span class="mk" style="color:var(--state-held)">╳</span>Read or write secrets</li>
+        <li><span class="mk" style="color:var(--state-held)">╳</span>Alter branch protection to force a merge</li>
+        <li><span class="mk" style="color:var(--state-held)">╳</span>Bypass required review · delete the repository</li>
+        <li><span class="mk" style="color:var(--state-held)">╳</span>Modify workflows unless separately justified</li>
+      </ul>
+    </div>
+  </div>
+
+  <table class="ledger">
+    <caption>Evidence state — as recorded in the repository, not promoted</caption>
+    <thead>
+      <tr><th scope="col">Signal</th><th scope="col">State</th><th scope="col">What it means</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Permission / effect map</td>
+        <td><span class="st documented"><span class="dotmark"></span>Documented</span></td>
+        <td>Derived from public GitHub documentation; a foundation-evidence profile, not a universal prescription.</td>
+      </tr>
+      <tr>
+        <td>Endpoint verification pass</td>
+        <td><span class="st pending"><span class="dotmark"></span>Pending</span></td>
+        <td>The exact endpoint-to-permission mapping still requires an executable verification pass.</td>
+      </tr>
+      <tr>
+        <td>Executable harness</td>
+        <td><span class="st none"><span class="dotmark"></span>Not built</span></td>
+        <td>No harness, offline test suite, or fixtures exist in the repository yet.</td>
+      </tr>
+      <tr>
+        <td>Live evidence</td>
+        <td><span class="st none"><span class="dotmark"></span>None</span></td>
+        <td>No live run has observed the required effects or the excluded effects.</td>
+      </tr>
+      <tr>
+        <td>Permission equality</td>
+        <td><span class="st false"><span class="dotmark"></span>False</span></td>
+        <td>Intentional. The permission sets are not equal and are not meant to be.</td>
+      </tr>
+      <tr>
+        <td>Parity verdict</td>
+        <td><span class="st pending"><span class="dotmark"></span>Unassessed</span></td>
+        <td>A candidate parity statement only. Conditionally equivalent, pending verifiable evidence.</td>
+      </tr>
+      <tr>
+        <td>Publishable evidence</td>
+        <td><span class="st none"><span class="dotmark"></span>No</span></td>
+        <td>Foundation phase. The authority gate is not yet passed.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="purpose-box" style="border-color:var(--line-2);background:var(--paper-2);margin-top:var(--s-4)">
+    <span class="k">Candidate parity statement</span>
+    <span class="v" style="font-size:1.1rem">The coding agent is purpose-bounded operationally equivalent to the human developer for the declared code-change-and-PR workflow <em>only if</em> all required effects are reachable, all prohibited effects remain outside its authority, and the evidence is reproducible under the declared repository and review constraints.</span>
+  </div>
+
+  <p style="margin-top:var(--s-3)">
+    <a class="inline mono" href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#reference-case-001--human-developer--github-coding-agent" style="font-size:.82rem">Inspect RC-001 on GitHub →</a>
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- ============================== I. FALSIFIABILITY ============================== -->
+<section class="falsify" id="falsify" aria-labelledby="fal-h">
+  <div class="wrap">
+    <p class="eyebrow">Falsifiability</p>
+    <div class="two">
+      <div>
+        <h2 class="h-lead" id="fal-h">A category that cannot be falsified is only branding.</h2>
+        <p class="h-sub">So the concept states, in advance, what would invalidate it. These are not rhetorical hedges. They are the conditions under which the claim should be revised rather than defended.</p>
+      </div>
+      <div>
+        <div class="fcard">
+          <div class="k">Falsifier · the category distinction</div>
+          <p>Isotely fails as a distinct relation if an existing concept already expresses the <strong>complete cross-class equivalence relation</strong> — cross-class actors, declared purpose, required and prohibited effects, and an explicit equivalence judgment — without any additional semantics. If the boundary collapses into authorization, delegation, effective permissions, or least privilege, the category claim is revised, not rescued rhetorically.</p>
+        </div>
+        <div class="fcard">
+          <div class="k">Falsifier · Reference Case 001</div>
+          <p>RC-001 fails to close its central question if a <strong>live run cannot observe operational parity while permission equality remains false</strong> — that is, if the required effects cannot be reached inside the minimal envelope, or if a prohibited effect is silently acquired to make the change succeed. Offline documentation is never converted into observed evidence.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================== J. IPP ============================== -->
+<section class="wrap" id="ipp" aria-labelledby="ipp-h">
+  <p class="eyebrow">From concept to representation</p>
+  <div class="two">
+    <div>
+      <h2 class="h-lead" id="ipp-h">The Isotely Parity Profile encodes the relation in machine-readable form.</h2>
+      <p class="h-sub">IPP represents a parity claim — identities, purpose, required and prohibited effects, boundary, entitlements, evidence, and a verdict — as structured data that can be inspected and, eventually, verified.</p>
+      <span class="maturity"><span class="dotmark"></span>Draft 0.1 · field names explicitly non-canonical</span>
+      <p style="margin-top:var(--s-3);font-size:.92rem;color:var(--ink-soft)">IPP 0.1 may not become a public canonical schema until the reference case has a verified endpoint map, external terminology is recorded, at least one credible challenge is tested against the boundary, and the schema demonstrably represents operational effect rather than re-labelling permission lists. It is a draft, not a standard.</p>
+      <p style="margin-top:var(--s-3)">
+        <a class="inline mono" href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#ipp-01--draft-representation-not-a-standard" style="font-size:.82rem">Inspect the IPP draft →</a>
+      </p>
+    </div>
+    <div>
+<pre class="code" aria-label="IPP 0.1 candidate structure"><span class="c">// IPP 0.1 — candidate structure (non-canonical)</span>
+{
+  <span class="key">"identity"</span>: {
+    <span class="key">"native_class"</span>: <span class="str">"human-developer"</span>,
+    <span class="key">"candidate_class"</span>: <span class="str">"github-agent-app"</span>
+  },
+  <span class="key">"purpose"</span>: {
+    <span class="key">"id"</span>: <span class="str">"github-code-change-pr"</span>,
+    <span class="key">"description"</span>: <span class="str">"Modify code on a task branch and open a pull request for human review"</span>
+  },
+  <span class="key">"effects"</span>: { <span class="key">"required"</span>: [], <span class="key">"prohibited"</span>: [] },
+  <span class="key">"boundary"</span>: {
+    <span class="key">"resources"</span>: [], <span class="key">"time"</span>: <span class="null">null</span>,
+    <span class="key">"review_requirements"</span>: [], <span class="key">"environment"</span>: <span class="null">null</span>
+  },
+  <span class="key">"entitlements"</span>: {
+    <span class="key">"native_observed"</span>: [], <span class="key">"candidate_required"</span>: []
+  },
+  <span class="key">"evidence"</span>: [],
+  <span class="key">"exceptions"</span>: [],
+  <span class="key">"verdict"</span>: {
+    <span class="key">"status"</span>: <span class="str">"unassessed"</span>,
+    <span class="key">"scope"</span>: <span class="str">"declared-purpose-only"</span>
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== K. INSPECTED / CITED ============================== -->
+<section class="cite" id="cite" aria-labelledby="cite-h">
+  <div class="wrap">
+    <p class="eyebrow">Provenance</p>
+    <h2 class="h-lead" id="cite-h">Built to be inspected.<br>Built to be cited.</h2>
+    <div class="cite-grid">
+      <div class="cite-card">
+        <h3>GitHub</h3>
+        <div class="role">Living source</div>
+        <ul>
+          <li>Doctrine &amp; governance</li>
+          <li>Category boundary &amp; anti-scope</li>
+          <li>Reference cases &amp; lexicon</li>
+          <li>Draft representation &amp; decision log</li>
+          <li>Reproducibility of every claim</li>
+        </ul>
+        <a class="link" href="https://github.com/Sohadot/Isotely">github.com/Sohadot/Isotely →</a>
+      </div>
+      <div class="cite-card">
+        <h3>Zenodo</h3>
+        <div class="role">Versioned record</div>
+        <ul>
+          <li>Archived releases</li>
+          <li>Stable provenance</li>
+          <li>DOI citation</li>
+        </ul>
+        <span class="link pending" aria-disabled="true">First archival release pending</span>
+      </div>
+    </div>
+    <p class="cite-hierarchy">
+      <b>GitHub</b> records evolution. <b>Zenodo</b> records releases. <b>Isotely.com</b> remains the canonical identity.
+    </p>
+  </div>
+</section>
+
+<!-- ============================== L. SOHADOT ============================== -->
+<section class="wrap steward" aria-labelledby="stew-h">
+  <p class="eyebrow" style="justify-content:center">Stewardship</p>
+  <p class="mark serif" id="stew-h">Built and stewarded by Sohadot.</p>
+  <p>Sohadot develops selected names into conceptual digital assets through definition, structure, evidence, interface, provenance, and strategic ownership. It is the builder and steward — not a marketplace seller.</p>
+  <p class="a-line">A Sohadot conceptual asset</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap-wide foot-grid">
+    <div class="foot-links" aria-label="References">
+      <a href="https://github.com/Sohadot/Isotely">Repository</a>
+      <a href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md">Definition</a>
+      <a href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#category-boundary">Distinction</a>
+      <a href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#reference-case-001--human-developer--github-coding-agent">RC-001</a>
+      <a href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#historical-provenance">Provenance</a>
+      <a href="https://github.com/Sohadot/Isotely/blob/main/FOUNDATION_DOCTRINE.md">Doctrine</a>
+      <a href="https://github.com/Sohadot">Sohadot</a>
+    </div>
+    <div class="foot-meta">
+      Isotely · purpose-bounded operational parity across unlike identity classes<br>
+      Foundation phase · v0 reference interface · not yet approved for publication<br>
+      Canonical definition fixed · lexicon &amp; representation revisable under evidence
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- Parity Field lens toggle ---- */
+  var pf = document.getElementById("parityField");
+  if (pf){
+    var buttons = pf.querySelectorAll(".pf-modes button");
+    var stateEl = document.getElementById("pfState");
+    var noteEl  = document.getElementById("pfNote");
+    var copy = {
+      surface: {
+        state: "Reading: permission surface — what each identity is entitled to.",
+        note:  "The two authority surfaces are deliberately unequal. Breadth on the left is multi-purpose; the right is shaped to one declared purpose."
+      },
+      effect: {
+        state: "Reading: operational effect — what the declared purpose requires of each.",
+        note:  "Both identities reach the same required effects; the agent additionally holds every prohibited effect outside its authority. Documented map — not yet executed."
+      }
+    };
+    function setMode(mode){
+      pf.setAttribute("data-mode", mode);
+      buttons.forEach(function(b){
+        b.setAttribute("aria-pressed", b.getAttribute("data-mode") === mode ? "true" : "false");
+      });
+      if (stateEl) stateEl.textContent = copy[mode].state;
+      if (noteEl)  noteEl.textContent  = copy[mode].note;
+    }
+    buttons.forEach(function(b){
+      b.addEventListener("click", function(){ setMode(b.getAttribute("data-mode")); });
+    });
+  }
+
+  /* ---- Scroll reveal (progressive enhancement) ---- */
+  var reveals = document.querySelectorAll(".reveal");
+  if (reduce || !("IntersectionObserver" in window)){
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+
+  /* ---- Smooth in-page nav without changing history noise ---- */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener("click", function(ev){
+      var id = a.getAttribute("href").slice(1);
+      if (!id) return;
+      var target = document.getElementById(id);
+      if (!target) return;
+      ev.preventDefault();
+      target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      target.setAttribute("tabindex","-1");
+      target.focus({ preventScroll: true });
+    });
+  });
+})();
+</script>
+</body>
+</html>
