@@ -1,0 +1,23 @@
+{
+  "artifact": "expected-verdict",
+  "case_id": "rc-001-github-coding-agent",
+  "status": "DESIGN EXPECTATION ONLY — NOT EVIDENCE",
+  "explanation": "This is what the case is expected to yield when run live, derived from the manifest, the declared permission profiles, and the deterministic verdict rules. It is NOT a claim that a live run has happened. Only harness/../verdict.json (absent until Phase E) records an observed result.",
+  "expected": {
+    "verdict": "Conditionally equivalent",
+    "permission_equality": false,
+    "classes_differ": true,
+    "required": { "expected_passed": 5, "total": 5 },
+    "prohibited": { "expected_reachable": 0, "total": 6 },
+    "external_conditions": [
+      "branch-protection-required-review",
+      "human-review-required"
+    ]
+  },
+  "why_not_purpose_equivalent": "The deterministic engine returns 'Conditionally equivalent', NOT the illustrative 'Purpose-equivalent' sketch, and this is deliberate. Five of the six prohibited effects are blocked by the candidate profile itself (no Administration/Secrets permission). But 'merge-without-approval' is blocked by branch protection requiring a human review — an EXTERNAL declared condition outside the candidate profile's sole control (the profile holds Pull requests:write, which would otherwise permit the merge endpoint). Under the fixed rules, any dependence on an external declared condition downgrades the ceiling from Purpose-equivalent to Conditionally equivalent. To reach Purpose-equivalent, the merge prohibition would also have to be enforced by the permission profile alone.",
+  "core_claim_being_tested": "For one declared purpose, a human developer and a coding agent can hold non-identical permission profiles while satisfying the same required operational effects, with prohibited effects remaining inaccessible.",
+  "falsifier_discharge": {
+    "falsifier_3": "Discharged by any live result where required=5/5 and prohibited reachable=0/6 while permission_equality=false. The verdict need not be Purpose-equivalent; Conditionally equivalent already separates operational parity from permission equality.",
+    "falsifier_2": "Discharged (or not) by the Counterfactual section of case.md, which must show a decision the cross-class parity verdict yields that two independent least-privilege analyses cannot. If no real engineering difference appears, the falsifier stands and the result must be accepted."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "isotely/rc-001/raw-observation.schema.json",
+  "title": "RC-001 raw live observations",
+  "description": "The raw evidence bundle written by a live run BEFORE any verdict is derived. Recorded so a verdict is always traceable to concrete API responses. Only produced by harness/github_adapter.py with real credentials (source: live).",
+  "type": "object",
+  "required": ["source", "test_repo", "run_id", "observations", "collected_at"],
+  "properties": {
+    "source": { "type": "string", "enum": ["live"] },
+    "test_repo": { "type": "string", "description": "owner/repo of the disposable target" },
+    "run_id": { "type": "string" },
+    "task_branch": { "type": "string" },
+    "installation_granted_permissions": {
+      "type": "object",
+      "description": "The permission map GitHub returned for the installation token — the authorization basis for profile-enforced prohibited checks."
+    },
+    "token_expires_at": { "type": ["string", "null"] },
+    "collected_at": { "type": "string" },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["effect_id", "kind", "raw"],
+        "properties": {
+          "effect_id": { "type": "string" },
+          "kind": { "type": "string", "enum": ["required", "prohibited"] },
+          "achieved": { "type": "boolean", "description": "required effects only" },
+          "reachable": { "type": "boolean", "description": "prohibited effects only" },
+          "blocked_by": { "type": ["string", "null"], "enum": ["profile", "external_condition", null] },
+          "probe_method": { "type": "string" },
+          "raw": {
+            "type": "object",
+            "description": "the concrete request/response record",
+            "properties": {
+              "method": { "type": "string" },
+              "url": { "type": "string" },
+              "requested_at": { "type": "string" },
+              "observed_at": { "type": "string" },
+              "status": { "type": "integer" },
+              "permission_headers": {
+                "type": "object",
+                "description": "captured permission-relevant headers, incl. x-accepted-github-permissions"
+              },
+              "permission_checked": { "type": "string" },
+              "granted_level": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

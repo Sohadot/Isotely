@@ -1,0 +1,38 @@
+{
+  "permissions_version": "1.0",
+  "case_id": "rc-001-github-coding-agent",
+  "note": "These are declared permission profiles for the two identity classes. They are inputs to the evaluator. They are NOT evidence that the profiles behave as declared; only a live observed run can establish behaviour.",
+  "native": {
+    "class": "human-developer",
+    "profile_kind": "broad multi-purpose developer authority",
+    "profile": {
+      "Contents": "write",
+      "Pull requests": "write",
+      "Issues": "write",
+      "Workflows": "write",
+      "Administration": "write",
+      "Secrets": "write",
+      "Members": "write"
+    },
+    "profile_rationale": "A human developer typically accumulates broad authority because the same identity performs many unrelated development and administrative tasks. This breadth is not evidence of what any single task requires."
+  },
+  "candidate": {
+    "class": "github-coding-agent",
+    "profile_kind": "narrow task-specific authority (GitHub App / Agent App)",
+    "profile": {
+      "Contents": "write",
+      "Pull requests": "write",
+      "Issues": "read",
+      "Workflows": "none",
+      "Administration": "none",
+      "Secrets": "none",
+      "Members": "none"
+    },
+    "repository_selection": "designated test repository only",
+    "profile_rationale": "The candidate is shaped around the effects of one declared purpose (change code, open PR for review), not around the native identity's full authority envelope."
+  },
+  "declared_asymmetry": {
+    "permission_equality": false,
+    "explanation": "The two profiles are intentionally non-identical. Isotely's claim is not that they are equal, but that both can produce the required operational effects of the declared purpose while the candidate cannot produce the prohibited effects."
+  }
+}

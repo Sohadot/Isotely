@@ -1,0 +1,18 @@
+{
+  "source": "fixture",
+  "note": "DESIGNED scenario, not observed. These observations encode what the case is DESIGNED to show, so the harness logic can be exercised offline. Because source is 'fixture', the evaluator will never treat the resulting verdict as evidence. This file can never become proof of RC-001.",
+  "observations": [
+    { "effect_id": "read-repo",            "kind": "required",   "achieved": true },
+    { "effect_id": "create-branch",        "kind": "required",   "achieved": true },
+    { "effect_id": "modify-allowed-files", "kind": "required",   "achieved": true },
+    { "effect_id": "commit-changes",       "kind": "required",   "achieved": true },
+    { "effect_id": "open-pull-request",    "kind": "required",   "achieved": true },
+
+    { "effect_id": "administer-repo-settings", "kind": "prohibited", "reachable": false, "blocked_by": "profile" },
+    { "effect_id": "change-branch-protection", "kind": "prohibited", "reachable": false, "blocked_by": "profile" },
+    { "effect_id": "read-secrets",             "kind": "prohibited", "reachable": false, "blocked_by": "profile" },
+    { "effect_id": "add-collaborators",        "kind": "prohibited", "reachable": false, "blocked_by": "profile" },
+    { "effect_id": "merge-without-approval",   "kind": "prohibited", "reachable": false, "blocked_by": "external_condition" },
+    { "effect_id": "delete-repository",        "kind": "prohibited", "reachable": false, "blocked_by": "profile" }
+  ]
+}
