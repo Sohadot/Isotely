@@ -1,0 +1,6 @@
+# Isotely — foundation phase.
+# The v0 reference interface is built but not yet approved for publication
+# (see domain-dossier.md, Foundation Gate). Kept out of indexes until the
+# authority gate is passed. No sitemap is published while unapproved.
+User-agent: *
+Disallow: /
