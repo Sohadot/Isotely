@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.pyc
+
+# Note on reference-cases/rc-001-github-coding-agent/verdict.json:
+# It is intentionally NOT ignored — a genuine live-run verdict (Phase E) is
+# meant to be committed as evidence. It is simply absent until a live run
+# produces it. The guarantee that a fixture/offline run can never create it
+# lives in code (harness/evaluator.is_publishable_evidence + run_offline.py
+# refusing to write it), not here.

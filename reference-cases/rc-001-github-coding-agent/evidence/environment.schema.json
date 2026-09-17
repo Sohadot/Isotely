@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "isotely/rc-001/environment.schema.json",
+  "title": "RC-001 environment evidence",
+  "description": "Records the provisioned test environment, especially branch protection, captured by an ADMIN/provisioning step — NOT by the candidate App (which is not granted Administration, not even read). This documents the external condition that makes merge-without-approval unreachable, without polluting the profile under test.",
+  "type": "object",
+  "required": ["test_repo", "recorded_by", "recorded_at", "branch_protection"],
+  "properties": {
+    "test_repo": { "type": "string" },
+    "recorded_by": {
+      "type": "string",
+      "description": "identity that recorded this (admin PAT / repo owner) — deliberately NOT the candidate App"
+    },
+    "recorded_at": { "type": "string" },
+    "protected_branch": { "type": "string", "default": "main" },
+    "branch_protection": {
+      "type": "object",
+      "required": ["required_pull_request_reviews", "enforce_admins"],
+      "properties": {
+        "required_pull_request_reviews": {
+          "type": "object",
+          "properties": {
+            "required_approving_review_count": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "enforce_admins": { "type": "boolean", "description": "true = no bypass" },
+        "allow_force_pushes": { "type": "boolean" },
+        "allow_deletions": { "type": "boolean" }
+      }
+    },
+    "app_installation": {
+      "type": "object",
+      "properties": {
+        "installed_on": { "type": "string", "description": "must be the target repo only" },
+        "granted_permissions": {
+          "type": "object",
+          "description": "must match permissions.json -> candidate; MUST NOT include Administration"
+        }
+      }
+    }
+  }
+}
