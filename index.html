@@ -306,6 +306,11 @@
   .cluster .row .q{color:var(--ink-soft);font-size:.92rem}
   .cluster .row.iso{background:var(--field)}
   .cluster .row.iso .term{color:var(--teal);font-weight:600}
+  .vd{font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;padding:.12rem .4rem;border:1px solid var(--line-2);margin-right:.55rem;white-space:nowrap;vertical-align:middle;color:var(--ink-faint)}
+  .vd.overlap{color:var(--bronze);border-color:color-mix(in srgb,var(--bronze) 40%,var(--line-2))}
+  .vd.adjacent{color:var(--ink-soft)}
+  .vd.ortho{color:var(--ink-faint)}
+  .vd.isov{color:var(--teal);border-color:color-mix(in srgb,var(--teal) 45%,var(--line-2))}
   @media (max-width:560px){.cluster .row{grid-template-columns:1fr;gap:.2rem}}
 
   /* ---------------- RC-001 dark band ---------------- */
@@ -520,8 +525,8 @@
     </div>
     <div class="pillar reveal">
       <svg class="ic" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="9" y="9" width="22" height="22" rx="1"/><path d="M15 20l3.5 3.5L26 16"/></svg>
-      <h3>Built to be reproduced</h3>
-      <p>The reference case declares its required effects, its prohibited effects, and a permission envelope drawn from public documentation — inspectable now, verifiable when executed.</p>
+      <h3>Executable evidence</h3>
+      <p>The reference case ships a deterministic harness with declared effects and permission profiles. Fourteen offline tests pass and reproduce the verdict from fixtures; live observation is the one remaining step.</p>
       <a href="#rc001">Explore RC-001 <span aria-hidden="true">→</span></a>
     </div>
     <div class="pillar reveal">
@@ -648,12 +653,10 @@
           <li class="only-surface"><span class="mk broad">broad</span><span>Collaborators · branch protection</span></li>
           <li class="only-surface"><span class="mk broad">broad</span><span>Secrets · workflows · other repositories</span></li>
           <li class="only-effect"><span class="mk w">reaches</span><span>Read repository contents</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Create task branch</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Write task-scoped source changes</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Create commits</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Read issue / PR context</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Create / update a pull request</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Expose the change to human review</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Create a task branch</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Modify allowed content</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Commit changes</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Open a pull request for review</span></li>
         </ul>
       </div>
       <div class="pf-col">
@@ -666,21 +669,20 @@
           <li class="only-surface"><span class="mk none">none</span><span>Administration · none</span></li>
           <li class="only-surface"><span class="mk none">none</span><span>Secrets · none · merge not claimed</span></li>
           <li class="only-effect"><span class="mk w">reaches</span><span>Read repository contents</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Create task branch</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Write task-scoped source changes</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Create commits</span></li>
-          <li class="only-effect"><span class="mk r">reaches</span><span>Read issue / PR context</span></li>
-          <li class="only-effect"><span class="mk w">reaches</span><span>Create / update a pull request</span></li>
-          <li class="only-effect"><span class="mk held">held</span><span>Prohibited effects remain excluded</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Create a task branch</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Modify allowed content</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Commit changes</span></li>
+          <li class="only-effect"><span class="mk w">reaches</span><span>Open a pull request for review</span></li>
+          <li class="only-effect"><span class="mk held">held</span><span>Prohibited effects (0 / 6) remain excluded</span></li>
         </ul>
       </div>
     </div>
     <div class="pf-foot">
       <div class="pf-verdicts">
         <span class="chip false"><span class="dotmark"></span>Permission equality&nbsp;<b>FALSE</b></span>
-        <span class="chip cond"><span class="dotmark"></span>Operational parity&nbsp;<b>candidate</b></span>
+        <span class="chip cond"><span class="dotmark"></span>Operational parity&nbsp;<b>offline: conditional</b></span>
       </div>
-      <p class="pf-note" id="pfNote">Candidate: the permission-to-effect map is documented from public GitHub documentation. It is not yet executed. No live run has observed these effects.</p>
+      <p class="pf-note" id="pfNote">Offline: the deterministic harness returns “Conditionally equivalent” over fixture observations (14/14 tests pass). That is a design expectation, not a live run — no observed evidence yet.</p>
     </div>
   </div>
 </section>
@@ -693,19 +695,25 @@
   <div class="two">
     <div>
       <h2 class="h-lead" id="dist-h">We tried to collapse the category.</h2>
-      <p class="h-sub">A distinction is only real if it resists being described entirely in existing terms. So Isotely is defined against its own anti-scope: if a proposed feature can be fully described as one of these — without reference to cross-class, purpose-bounded parity — it does not belong to the concept.</p>
-      <p class="note" style="margin-top:var(--s-3)">The formal external-terminology distinction test is governed by the Research Integration Protocol and remains in progress. No independent category adoption is claimed. The distinction <em style="color:var(--teal);font-style:normal">survives the current collapse test</em> — that is not a proven, adopted new category.</p>
-      <p style="margin-top:var(--s-3)"><a class="inline mono" href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#category-boundary" style="font-size:.82rem">Inspect the full category boundary →</a></p>
+      <p class="h-sub">The category distinction test is a real, adversarial artifact — it attacks Isotely rather than defending it. <strong>Test-run-001</strong> lined up the twelve nearest concepts and tried to prove that one of them already says everything Isotely says. A concept counts as the <em>same</em> only if it carries all six components on its own, including cross-class actors (C1) and an equivalence relation (C2).</p>
+      <p class="note" style="margin-top:var(--s-3)">Result — <span style="color:var(--teal)">12 concepts · 0 SAME · 3 OVERLAP · 6 ADJACENT · 3 ORTHOGONAL</span>. Under the test's own decision rule — Isotely survives only if <em style="color:var(--teal);font-style:normal">zero concepts are judged the same</em> — it survives <strong style="color:var(--ink)">provisionally</strong>. The load-bearing distinction is the pairing of <span style="color:var(--teal)">cross-class</span> actors with an <span style="color:var(--teal)">equivalence relation</span> (C1 + C2): no rival carries both. This is survival under the artifact's own rule — not an industry-validated standard, and not an adopted category.</p>
+      <p style="margin-top:var(--s-3)"><a class="inline mono" href="https://github.com/Sohadot/Isotely/blob/claude/isotely-reference-interface-p68t5u/research/category-distinction-test.md" style="font-size:.82rem">Inspect the distinction test (test-run-001) →</a></p>
     </div>
     <div>
-      <div class="cluster" aria-label="Concepts Isotely is tested against">
-        <div class="row"><div class="term">Authentication</div><div class="q">proving identity — not parity of effect</div></div>
-        <div class="row"><div class="term">Authorization</div><div class="q">what one actor may do — not cross-class equivalence</div></div>
-        <div class="row"><div class="term">Delegation</div><div class="q">acting on another's mandate — not independent parity</div></div>
-        <div class="row"><div class="term">Least privilege</div><div class="q">minimum for one identity — not equivalence across two</div></div>
-        <div class="row"><div class="term">Zero standing privilege</div><div class="q">removing standing access — not a purpose-bounded relation</div></div>
-        <div class="row"><div class="term">Effective permissions</div><div class="q">what one identity resolves to — not a judged equivalence</div></div>
-        <div class="row iso"><div class="term">Isotely</div><div class="q"><strong>cross-class + explicit equivalence judgment under a declared purpose</strong></div></div>
+      <div class="cluster" aria-label="The twelve nearest concepts and their verdicts">
+        <div class="row"><div class="term">Least privilege</div><div class="q"><span class="vd overlap">OVERLAP</span>minimum for one identity — not equivalence across two</div></div>
+        <div class="row"><div class="term">PBAC</div><div class="q"><span class="vd overlap">OVERLAP</span>owns the purpose primitive — not the cross-class relation</div></div>
+        <div class="row"><div class="term">Effective permissions</div><div class="q"><span class="vd overlap">OVERLAP</span>what one identity resolves to — not a judged equivalence</div></div>
+        <div class="row"><div class="term">Delegation</div><div class="q"><span class="vd adjacent">ADJACENT</span>authority derived from a principal — the contrast class</div></div>
+        <div class="row"><div class="term">Zero standing privilege</div><div class="q"><span class="vd adjacent">ADJACENT</span>how long privilege persists — not a parity claim</div></div>
+        <div class="row"><div class="term">Just-in-time access</div><div class="q"><span class="vd adjacent">ADJACENT</span>when access is provisioned — a delivery mechanism</div></div>
+        <div class="row"><div class="term">Separation of duties</div><div class="q"><span class="vd adjacent">ADJACENT</span>lineage for prohibited effects — a control pattern</div></div>
+        <div class="row"><div class="term">Capability security</div><div class="q"><span class="vd adjacent">ADJACENT</span>authority decoupled from identity — a friendly model</div></div>
+        <div class="row"><div class="term">Permission parity</div><div class="q"><span class="vd adjacent">ADJACENT · inverted</span>the anti-term Isotely negates</div></div>
+        <div class="row"><div class="term">Scoped credentials</div><div class="q"><span class="vd ortho">ORTHOGONAL</span>the substrate that enforces a boundary — a mechanism</div></div>
+        <div class="row"><div class="term">ABAC</div><div class="q"><span class="vd ortho">ORTHOGONAL</span>a general enforcement model — a different layer</div></div>
+        <div class="row"><div class="term">NHI / workload identity</div><div class="q"><span class="vd ortho">ORTHOGONAL</span>a taxonomy of subjects — supplies the classes</div></div>
+        <div class="row iso"><div class="term">Isotely</div><div class="q"><span class="vd isov">SURVIVES</span><strong>cross-class + equivalence judgment under a declared purpose</strong></div></div>
       </div>
     </div>
   </div>
@@ -719,44 +727,40 @@
       <div>
         <h2 id="rc-h">Human Developer&nbsp;→<br>GitHub Coding Agent</h2>
         <p class="purpose">A coding agent may inspect one designated repository, modify source code on a working branch, commit those changes, and open or update a pull request for human review.</p>
-        <a class="rc-cta" href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#reference-case-001--human-developer--github-coding-agent">Explore the case <span aria-hidden="true">→</span></a>
+        <a class="rc-cta" href="https://github.com/Sohadot/Isotely/blob/claude/isotely-reference-interface-p68t5u/reference-cases/rc-001-github-coding-agent/case.md">Explore the case <span aria-hidden="true">→</span></a>
         <div class="effcols" style="margin-top:var(--s-4)">
           <div class="req">
-            <h5>Required effects</h5>
+            <h5>Required effects · 5 / 5 reachable</h5>
             <ul>
               <li><span class="mk">✓</span>Read repository contents</li>
               <li><span class="mk">✓</span>Create a task branch</li>
               <li><span class="mk">✓</span>Modify allowed content</li>
               <li><span class="mk">✓</span>Commit changes</li>
-              <li><span class="mk">✓</span>Read issue / PR context</li>
-              <li><span class="mk">✓</span>Open a pull request</li>
-              <li><span class="mk">✓</span>Expose to human review</li>
+              <li><span class="mk">✓</span>Open a pull request for review</li>
             </ul>
           </div>
           <div class="pro">
-            <h5>Prohibited effects</h5>
+            <h5>Prohibited effects · 0 / 6 reachable</h5>
             <ul>
               <li><span class="mk">✕</span>Change repository settings</li>
               <li><span class="mk">✕</span>Change branch protection</li>
-              <li><span class="mk">✕</span>Access secrets</li>
+              <li><span class="mk">✕</span>Read secrets</li>
               <li><span class="mk">✕</span>Add collaborators</li>
-              <li><span class="mk">✕</span>Merge without approval</li>
+              <li><span class="mk">✕</span>Merge without approval <span style="opacity:.7">· external</span></li>
               <li><span class="mk">✕</span>Delete the repository</li>
-              <li><span class="mk">✕</span>Modify workflows (unless justified)</li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="evbox" role="table" aria-label="Evidence status, as recorded in the repository">
-        <div class="cap"><span>Evidence status</span><span>Not promoted</span></div>
-        <div class="evrow" role="row"><span class="lab">Permission / effect map</span><span class="val v-doc"><span class="dotmark"></span>Documented</span></div>
-        <div class="evrow" role="row"><span class="lab">Endpoint verification</span><span class="val v-pend"><span class="dotmark"></span>Pending</span></div>
-        <div class="evrow" role="row"><span class="lab">Executable harness</span><span class="val v-none"><span class="dotmark"></span>Not built</span></div>
-        <div class="evrow" role="row"><span class="lab">Live evidence</span><span class="val v-none"><span class="dotmark"></span>None</span></div>
-        <div class="evrow" role="row"><span class="lab">Current verdict</span><span class="val v-pend"><span class="dotmark"></span>Unassessed</span></div>
+      <div class="evbox" role="table" aria-label="Pre-live evidence state for RC-001">
+        <div class="cap"><span>Pre-live evidence state</span><span>Not proof</span></div>
+        <div class="evrow" role="row"><span class="lab">Harness</span><span class="val v-doc"><span class="dotmark"></span>Validated</span></div>
+        <div class="evrow" role="row"><span class="lab">Offline tests</span><span class="val v-doc"><span class="dotmark"></span>14 / 14 pass</span></div>
+        <div class="evrow" role="row"><span class="lab">Offline verdict</span><span class="val v-doc"><span class="dotmark"></span>Conditionally equivalent</span></div>
         <div class="evrow" role="row"><span class="lab">Permission equality</span><span class="val v-false"><span class="dotmark"></span>False</span></div>
+        <div class="evrow" role="row"><span class="lab">Live evidence</span><span class="val v-pend"><span class="dotmark"></span>Pending</span></div>
         <div class="evrow" role="row"><span class="lab">Publishable evidence</span><span class="val v-none"><span class="dotmark"></span>No</span></div>
-        <div class="foot">No harness, offline test suite, or live run exists in the repository yet. A candidate parity statement only — conditionally equivalent, pending verifiable evidence. <a href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#reference-case-001--human-developer--github-coding-agent">Inspect RC-001 →</a></div>
+        <div class="foot">Harness validation is not proof. The offline verdict is a design expectation computed from fixture observations by the deterministic evaluator — not observed live evidence. No live run has occurred and <span class="mono">verdict.json</span> is absent by design. Permission equality is false in the configured / offline case. <a href="https://github.com/Sohadot/Isotely/tree/claude/isotely-reference-interface-p68t5u/reference-cases/rc-001-github-coding-agent">Inspect RC-001 →</a></div>
       </div>
     </div>
   </div>
@@ -903,8 +907,8 @@
       <nav class="foot-links" aria-label="References">
         <a href="https://github.com/Sohadot/Isotely">GitHub</a>
         <a href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md">Definition</a>
-        <a href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#category-boundary">Distinction</a>
-        <a href="https://github.com/Sohadot/Isotely/blob/main/domain-dossier.md#reference-case-001--human-developer--github-coding-agent">RC-001</a>
+        <a href="https://github.com/Sohadot/Isotely/blob/claude/isotely-reference-interface-p68t5u/research/category-distinction-test.md">Distinction test</a>
+        <a href="https://github.com/Sohadot/Isotely/tree/claude/isotely-reference-interface-p68t5u/reference-cases/rc-001-github-coding-agent">RC-001</a>
         <a href="https://github.com/Sohadot/Isotely/blob/main/FOUNDATION_DOCTRINE.md">Doctrine</a>
         <span class="pending" aria-disabled="true">Zenodo · pending</span>
       </nav>
@@ -937,7 +941,7 @@
       },
       effect: {
         state: "Reading: operational effect — what the declared purpose requires of each.",
-        note:  "Both identities reach the same required effects; the agent additionally holds every prohibited effect outside its authority. Documented map — not yet executed."
+        note:  "Offline: the harness returns “Conditionally equivalent” over fixture observations (14/14 tests pass). A design expectation, not a live run — no observed evidence yet."
       }
     };
     function setMode(mode){
