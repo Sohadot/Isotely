@@ -126,7 +126,8 @@ It will:
 
 1. mint a short-lived installation token,
 2. run the live adapter against the target (safe probes only — no destructive
-   mutation; `merge` is attempted and expected to be rejected),
+   mutation; merge is NEVER attempted. The external review prohibition is
+   conditionally supported by the admin-recorded read-only protection evidence),
 3. write `evidence/observations-<run-id>.json` (raw) and `verdict.json`,
 4. upload both as an artifact for review.
 
@@ -149,8 +150,10 @@ permission_equality: false
 - `Conditionally equivalent` here is a **success** — parity holds, bounded by
   the external review barrier.
 - Confirm each prohibited effect's `blocked_by` is `profile` or
-  `external_condition` as expected, and that no destructive mutation was
-  performed (destructive checks show `probe_method: granted-permissions-...`).
+  `external_condition` as expected. No destructive mutation or merge request
+  is performed. The merge prohibition must show
+  `probe_method: admin-attested-read-only-protection`; that result relies on
+  administrator-reviewed branch protection, not an observed HTTP rejection.
 
 Only after this review is `verdict.json` committed and the case log updated.
 
@@ -164,4 +167,4 @@ Only after this review is `verdict.json` committed and the case log updated.
 - [ ] App installed on the target only; **not** on the control repo.
 - [ ] Private key only in the control repo Actions **secret**; never elsewhere.
 - [ ] Admin-recorded `evidence/environment.json` exists, is verified, and describes a no-bypass review barrier.
-- [ ] No destructive endpoint is ever *executed* to prove a prohibition (merge probe is attempted only after verified protection).
+- [ ] No destructive endpoint is ever *executed* to prove a prohibition — including the merge endpoint. Review protection is admin-attested, not tested with a PUT request.
