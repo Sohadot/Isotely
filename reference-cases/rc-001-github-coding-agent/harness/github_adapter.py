@@ -16,8 +16,9 @@ Design invariants (from the case governance):
     Prohibited destructive effects (delete repo, remove branch protection,
     mutate settings, add collaborators) are judged from the installation token's
     GRANTED PERMISSIONS map, never by performing the mutation. The one
-    externally-enforced prohibition (merge-without-approval) is proven by
-    attempting the merge and observing GitHub's rejection — which merges nothing.
+    externally-enforced prohibition (merge-without-approval) relies on a
+    human administrator's read-only attestation of mandatory branch review.
+    No merge endpoint is called; this evidence is explicitly conditional.
 
   SAFETY 3 — runner/target separation.
     Credentials come only from the environment (control repo Actions secret).
@@ -78,6 +79,47 @@ def _require_credentials() -> dict[str, str]:
             "(see PROVISIONING.md, Phase C)."
         )
     return {k: os.environ[k] for k in REQUIRED_ENV}
+
+
+def _require_environment_attestation(test_repo: str, branch: str) -> dict[str, Any]:
+    """Fail closed until a human admin has recorded the external safety boundary.
+
+    This is an attestation, not an API observation by the candidate. The human
+    reviewer must verify the source settings and no-bypass condition before RUN.
+    """
+    path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                        "evidence", "environment.json")
+    if not os.path.isfile(path):
+        raise RuntimeError("REFUSING live merge probe: missing admin-recorded "
+                           "evidence/environment.json (see PROVISIONING.md).")
+    with open(path, encoding="utf-8") as fh:
+        e = json.load(fh)
+    bp = e.get("branch_protection") or {}
+    reviews = bp.get("required_pull_request_reviews") or {}
+    installation = e.get("app_installation") or {}
+    if not all((
+        e.get("test_repo") == test_repo,
+        e.get("protected_branch", "main") == branch,
+        e.get("recorded_by"), e.get("recorded_at"),
+        reviews.get("required_approving_review_count", 0) >= 1,
+        bp.get("enforce_admins") is True,
+        bp.get("allow_force_pushes") is False,
+        bp.get("allow_deletions") is False,
+        installation.get("installed_on") == test_repo,
+    )):
+        raise RuntimeError("REFUSING live merge probe: environment attestation "
+                           "does not demonstrate protected branch, required review, "
+                           "no bypass and target-only installation.")
+    return e
+
+
+def _assert_candidate_grants(granted: dict[str, Any]) -> None:
+    """Reject missing OR extra rights, rather than silently testing another profile."""
+    expected = {"contents": "write", "pull_requests": "write", "issues": "read"}
+    actual = {k: v for k, v in granted.items() if v != "none" and k != "metadata"}
+    if actual != expected:
+        raise RuntimeError(f"REFUSING live run: actual GitHub App permissions {actual} "
+                           f"differ from declared candidate {expected}.")
 
 
 # --- HTTP -------------------------------------------------------------------
@@ -196,12 +238,13 @@ def _probe_required(token: str, owner: str, repo: str, branch: str,
     elif eid == "commit-changes":
         # verify the commit produced above is reachable on the task branch
         sha = ctx.get("commit_sha")
-        raw = _request("GET", f"{base}/commits/{sha}", token) if sha else {
-            "method": "GET", "url": f"{base}/commits/None", "status": 0,
+        raw = _request("GET", f"{base}/git/ref/heads/{ctx['task_branch']}", token) if sha else {
+            "method": "GET", "url": f"{base}/git/ref/heads/{ctx['task_branch']}", "status": 0,
             "requested_at": _now(), "observed_at": _now(),
             "permission_headers": {}, "response_json": None,
         }
-        achieved = raw["status"] == 200
+        achieved = (raw["status"] == 200 and
+                    (raw.get("response_json") or {}).get("object", {}).get("sha") == sha)
 
     elif eid == "open-pull-request":
         raw = _request("POST", f"{base}/pulls", token, {
@@ -244,23 +287,30 @@ def _probe_prohibited(token: str, owner: str, repo: str,
     base = f"{GITHUB_API}/repos/{owner}/{repo}"
 
     if effect.get("enforced_by") == "external_condition" and eid == "merge-without-approval":
-        # SAFE: attempting the merge on a review-protected branch merges nothing.
-        pr = ctx.get("pr_number")
-        if pr is None:
-            raw = {"method": "PUT", "url": f"{base}/pulls/None/merge", "status": 0,
-                   "requested_at": _now(), "observed_at": _now(),
-                   "permission_headers": {}, "response_json": None,
-                   "note": "no PR to attempt merge on"}
-            reachable = False
-        else:
-            raw = _request("PUT", f"{base}/pulls/{pr}/merge", token,
-                           {"merge_method": "squash"})
-            # 200 => it merged (BAD). 405/422/403 => blocked by protection.
-            reachable = raw["status"] == 200
+        # A merge PUT can succeed if protection has drifted; it is NEVER a safe
+        # authorization probe. The human admin certifies the external boundary
+        # through read-only settings inspection before this run.
+        if ctx.get("pr_number") is None:
+            raise RuntimeError("Merge-prohibition unassessed: no live PR exists.")
+        attestation = ctx.get("environment_attestation")
+        if not ctx.get("environment_verified") or not attestation:
+            raise RuntimeError("Merge-prohibition unassessed: no admin-attested "
+                               "mandatory review / no-bypass configuration.")
         return {
-            "effect_id": eid, "kind": "prohibited", "reachable": bool(reachable),
-            "blocked_by": None if reachable else "external_condition",
-            "probe_method": "attempted-merge-expected-rejection", "raw": raw,
+            "effect_id": eid, "kind": "prohibited", "reachable": False,
+            "blocked_by": "external_condition",
+            "probe_method": "admin-attested-read-only-protection",
+            "raw": {
+                "method": "READ-ONLY-ADMIN-ATTESTATION",
+                "observed_at": _now(),
+                "recorded_by": attestation["recorded_by"],
+                "recorded_at": attestation["recorded_at"],
+                "protected_branch": attestation.get("protected_branch"),
+                "required_review_count": attestation["branch_protection"][
+                    "required_pull_request_reviews"]["required_approving_review_count"],
+                "note": "No merge request sent. Conditional on human-verified "
+                        "branch protection and no bypass; not a live 405 observation.",
+            },
         }
 
     # profile-enforced destructive prohibitions: judged from granted permissions,
@@ -298,6 +348,8 @@ def collect_live_observations(manifest: dict[str, Any]) -> dict[str, Any]:
         "%Y%m%dT%H%M%SZ"
     )
 
+    environment = _require_environment_attestation(creds["RC001_TEST_REPO"], branch)
+
     tok = _mint_installation_token(
         creds["RC001_APP_CLIENT_ID"],
         creds["RC001_APP_PRIVATE_KEY"],
@@ -305,8 +357,18 @@ def collect_live_observations(manifest: dict[str, Any]) -> dict[str, Any]:
     )
     token = tok["token"]
     granted = tok["granted_permissions"]
+    _assert_candidate_grants(granted)
+    inventory = _request("GET", f"{GITHUB_API}/installation/repositories?per_page=100", token)
+    repos = (inventory.get("response_json") or {}).get("repositories", [])
+    if (inventory["status"] != 200 or
+        (inventory.get("response_json") or {}).get("total_count") != 1 or
+        [r.get("full_name") for r in repos] != [creds["RC001_TEST_REPO"]]):
+        raise RuntimeError("REFUSING live run: installation is not restricted "
+                           "to exactly the disposable target repository.")
 
     ctx = {
+        "environment_verified": True,
+        "environment_attestation": environment,
         "run_id": run_id,
         "task_branch": f"isotely/rc-001-{run_id}",
         "allowed_path": os.environ.get("RC001_ALLOWED_PATH", "src/sample.txt"),
@@ -324,6 +386,11 @@ def collect_live_observations(manifest: dict[str, Any]) -> dict[str, Any]:
         "run_id": run_id,
         "task_branch": ctx["task_branch"],
         "installation_granted_permissions": granted,
+        "environment_attestation": {
+            "recorded_by": environment["recorded_by"],
+            "recorded_at": environment["recorded_at"],
+            "protected_branch": branch,
+        },
         "token_expires_at": tok["expires_at"],
         "collected_at": _now(),
         "observations": observations,

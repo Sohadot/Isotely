@@ -125,9 +125,9 @@
       "external_condition_id": "branch-protection-required-review",
       "destructive": true,
       "probe": {
-        "method": "authorization-check",
-        "endpoint_family": "PUT /repos/{owner}/{repo}/pulls/{n}/merge",
-        "block_criterion": "405/branch protection rejects merge without required review; no forced merge attempted"
+        "method": "read-only-admin-attestation",
+        "endpoint_family": "branch-protection configuration (inspected by admin; NOT accessed by candidate)",
+        "block_criterion": "recorded mandatory PR approval plus no bypass; no merge endpoint executed; result remains externally conditioned"
       }
     },
     {

@@ -100,12 +100,22 @@ once, conforming to `evidence/environment.schema.json`:
 ```
 evidence/environment.json
   test_repo, recorded_by (admin/owner — NOT the App), recorded_at,
-  branch_protection { required_approving_review_count: 1, enforce_admins: true, ... },
+  protected_branch: main,
+  branch_protection { required_pull_request_reviews: { required_approving_review_count: 1 },
+                      enforce_admins: true, allow_force_pushes: false, allow_deletions: false },
   app_installation { installed_on: target only, granted_permissions: candidate profile }
 ```
 
-This documents the external condition and confirms the installed profile matches
-`permissions.json` without the candidate ever touching Administration.
+**Before triggering the workflow**, commit the admin-recorded, schema-conforming
+`evidence/environment.json` to the control repository. Inspect the actual
+protected-branch configuration and ensure this GitHub App is not on a bypass
+list. The runner refuses to attempt a merge without that evidence. The file
+contains no token, private key or sensitive credentials. The runner also checks
+the token's actual granted permissions and installation repository list live;
+a written attestation alone is not sufficient to prove those facts.
+
+This documents the external condition without the candidate ever touching
+Administration.
 
 ---
 
@@ -116,7 +126,8 @@ It will:
 
 1. mint a short-lived installation token,
 2. run the live adapter against the target (safe probes only — no destructive
-   mutation; `merge` is attempted and expected to be rejected),
+   mutation; merge is NEVER attempted. The external review prohibition is
+   conditionally supported by the admin-recorded read-only protection evidence),
 3. write `evidence/observations-<run-id>.json` (raw) and `verdict.json`,
 4. upload both as an artifact for review.
 
@@ -139,8 +150,10 @@ permission_equality: false
 - `Conditionally equivalent` here is a **success** — parity holds, bounded by
   the external review barrier.
 - Confirm each prohibited effect's `blocked_by` is `profile` or
-  `external_condition` as expected, and that no destructive mutation was
-  performed (destructive checks show `probe_method: granted-permissions-...`).
+  `external_condition` as expected. No destructive mutation or merge request
+  is performed. The merge prohibition must show
+  `probe_method: admin-attested-read-only-protection`; that result relies on
+  administrator-reviewed branch protection, not an observed HTTP rejection.
 
 Only after this review is `verdict.json` committed and the case log updated.
 
@@ -153,4 +166,5 @@ Only after this review is `verdict.json` committed and the case log updated.
 - [ ] App permissions == candidate profile; **no Administration/Secrets**.
 - [ ] App installed on the target only; **not** on the control repo.
 - [ ] Private key only in the control repo Actions **secret**; never elsewhere.
-- [ ] No destructive endpoint is ever *executed* to prove a prohibition.
+- [ ] Admin-recorded `evidence/environment.json` exists, is verified, and describes a no-bypass review barrier.
+- [ ] No destructive endpoint is ever *executed* to prove a prohibition — including the merge endpoint. Review protection is admin-attested, not tested with a PUT request.

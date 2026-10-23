@@ -1,0 +1,25 @@
+name: rc-001-offline-tests
+
+on:
+  pull_request:
+    paths:
+      - 'reference-cases/rc-001-github-coding-agent/**'
+      - '.github/workflows/rc-001-offline-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: reference-cases/rc-001-github-coding-agent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - run: python harness/run_offline.py
