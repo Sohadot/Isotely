@@ -301,6 +301,15 @@ def _probe_prohibited(token: str, owner: str, repo: str,
         if raw["status"] not in (200, 405):
             raise RuntimeError(f"Merge-prohibition unassessed: HTTP {raw['status']} "
                                "is not an accepted proof of the review barrier.")
+        if raw["status"] == 405:
+            response = raw.get("response_json") or {}
+            reason = (response.get("message", "") + " " +
+                      " ".join(str(e.get("message", "")) for e in
+                               response.get("errors", []) if isinstance(e, dict))).lower()
+            if not any(term in reason for term in
+                       ("review", "approval", "branch protection", "protected branch")):
+                raise RuntimeError("Merge-prohibition unassessed: HTTP 405 "
+                                   "without an explicit branch-review barrier reason.")
         reachable = raw["status"] == 200
         return {
             "effect_id": eid, "kind": "prohibited", "reachable": bool(reachable),
