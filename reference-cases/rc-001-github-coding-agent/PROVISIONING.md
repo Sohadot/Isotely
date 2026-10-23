@@ -100,11 +100,22 @@ once, conforming to `evidence/environment.schema.json`:
 ```
 evidence/environment.json
   test_repo, recorded_by (admin/owner — NOT the App), recorded_at,
-  protected_branch: main,\n  branch_protection { required_pull_request_reviews: { required_approving_review_count: 1 },\n                      enforce_admins: true, allow_force_pushes: false, allow_deletions: false },
+  protected_branch: main,
+  branch_protection { required_pull_request_reviews: { required_approving_review_count: 1 },
+                      enforce_admins: true, allow_force_pushes: false, allow_deletions: false },
   app_installation { installed_on: target only, granted_permissions: candidate profile }
 ```
 
-**Before triggering the workflow**, commit the admin-recorded, schema-conforming\n`evidence/environment.json` to the control repository. Inspect the actual\nprotected-branch configuration and ensure this GitHub App is not on a bypass\nlist. The runner refuses to attempt a merge without that evidence. The file\ncontains no token, private key or sensitive credentials. The runner also checks\nthe token's actual granted permissions and installation repository list live;\na written attestation alone is not sufficient to prove those facts.\n\nThis documents the external condition without the candidate ever touching\nAdministration.
+**Before triggering the workflow**, commit the admin-recorded, schema-conforming
+`evidence/environment.json` to the control repository. Inspect the actual
+protected-branch configuration and ensure this GitHub App is not on a bypass
+list. The runner refuses to attempt a merge without that evidence. The file
+contains no token, private key or sensitive credentials. The runner also checks
+the token's actual granted permissions and installation repository list live;
+a written attestation alone is not sufficient to prove those facts.
+
+This documents the external condition without the candidate ever touching
+Administration.
 
 ---
 
@@ -152,4 +163,5 @@ Only after this review is `verdict.json` committed and the case log updated.
 - [ ] App permissions == candidate profile; **no Administration/Secrets**.
 - [ ] App installed on the target only; **not** on the control repo.
 - [ ] Private key only in the control repo Actions **secret**; never elsewhere.
-- [ ] Admin-recorded `evidence/environment.json` exists, is verified, and describes a no-bypass review barrier.\n- [ ] No destructive endpoint is ever *executed* to prove a prohibition (merge probe is attempted only after verified protection).
+- [ ] Admin-recorded `evidence/environment.json` exists, is verified, and describes a no-bypass review barrier.
+- [ ] No destructive endpoint is ever *executed* to prove a prohibition (merge probe is attempted only after verified protection).
