@@ -35,10 +35,22 @@ class LiveAdapterSafety(unittest.TestCase):
         e = {"id": "merge-without-approval", "enforced_by": "external_condition"}
         for status, expected in ((405, False), (200, True)):
             with self.subTest(status=status):
-                with patch.object(ga, "_request", return_value={"status": status}):
+                with patch.object(ga, "_request", return_value={
+                    "status": status,
+                    "response_json": {"message": "Protected branch requires approving review"}
+                }):
                     o = ga._probe_prohibited("token", "o", "r", e, {},
                                              {"pr_number": 4, "environment_verified": True})
                 self.assertIs(o["reachable"], expected)
+
+    def test_generic_405_does_not_prove_review_protection(self):
+        e = {"id": "merge-without-approval", "enforced_by": "external_condition"}
+        with patch.object(ga, "_request", return_value={
+            "status": 405, "response_json": {"message": "Pull request is not mergeable"}
+        }):
+            with self.assertRaisesRegex(RuntimeError, "without an explicit"):
+                ga._probe_prohibited("token", "o", "r", e, {},
+                                     {"pr_number": 4, "environment_verified": True})
 
     def test_permission_drift_rejected(self):
         correct = {"contents": "write", "pull_requests": "write",
