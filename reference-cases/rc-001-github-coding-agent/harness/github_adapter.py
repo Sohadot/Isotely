@@ -16,8 +16,9 @@ Design invariants (from the case governance):
     Prohibited destructive effects (delete repo, remove branch protection,
     mutate settings, add collaborators) are judged from the installation token's
     GRANTED PERMISSIONS map, never by performing the mutation. The one
-    externally-enforced prohibition (merge-without-approval) is proven by
-    attempting the merge and observing GitHub's rejection — which merges nothing.
+    externally-enforced prohibition (merge-without-approval) relies on a
+    human administrator's read-only attestation of mandatory branch review.
+    No merge endpoint is called; this evidence is explicitly conditional.
 
   SAFETY 3 — runner/target separation.
     Credentials come only from the environment (control repo Actions secret).
@@ -286,35 +287,30 @@ def _probe_prohibited(token: str, owner: str, repo: str,
     base = f"{GITHUB_API}/repos/{owner}/{repo}"
 
     if effect.get("enforced_by") == "external_condition" and eid == "merge-without-approval":
-        # SAFE: attempting the merge on a review-protected branch merges nothing.
-        pr = ctx.get("pr_number")
-        if pr is None:
-            raise RuntimeError("Merge-prohibition unassessed: no live PR exists. "
-                               "A missing probe is never a successful block.")
-        if not ctx.get("environment_verified"):
-            raise RuntimeError("REFUSING merge probe: external protection was not "
-                               "attested and checked before the live attempt.")
-        raw = _request("PUT", f"{base}/pulls/{pr}/merge", token,
-                       {"merge_method": "squash"})
-        # GitHub documents 200 = merged, 405 = merge cannot be performed.
-        # 403/404/409/422 and transport errors cannot establish review protection.
-        if raw["status"] not in (200, 405):
-            raise RuntimeError(f"Merge-prohibition unassessed: HTTP {raw['status']} "
-                               "is not an accepted proof of the review barrier.")
-        if raw["status"] == 405:
-            response = raw.get("response_json") or {}
-            reason = (response.get("message", "") + " " +
-                      " ".join(str(e.get("message", "")) for e in
-                               response.get("errors", []) if isinstance(e, dict))).lower()
-            if not any(term in reason for term in
-                       ("review", "approval", "branch protection", "protected branch")):
-                raise RuntimeError("Merge-prohibition unassessed: HTTP 405 "
-                                   "without an explicit branch-review barrier reason.")
-        reachable = raw["status"] == 200
+        # A merge PUT can succeed if protection has drifted; it is NEVER a safe
+        # authorization probe. The human admin certifies the external boundary
+        # through read-only settings inspection before this run.
+        if ctx.get("pr_number") is None:
+            raise RuntimeError("Merge-prohibition unassessed: no live PR exists.")
+        attestation = ctx.get("environment_attestation")
+        if not ctx.get("environment_verified") or not attestation:
+            raise RuntimeError("Merge-prohibition unassessed: no admin-attested "
+                               "mandatory review / no-bypass configuration.")
         return {
-            "effect_id": eid, "kind": "prohibited", "reachable": bool(reachable),
-            "blocked_by": None if reachable else "external_condition",
-            "probe_method": "attempted-merge-expected-rejection", "raw": raw,
+            "effect_id": eid, "kind": "prohibited", "reachable": False,
+            "blocked_by": "external_condition",
+            "probe_method": "admin-attested-read-only-protection",
+            "raw": {
+                "method": "READ-ONLY-ADMIN-ATTESTATION",
+                "observed_at": _now(),
+                "recorded_by": attestation["recorded_by"],
+                "recorded_at": attestation["recorded_at"],
+                "protected_branch": attestation.get("protected_branch"),
+                "required_review_count": attestation["branch_protection"][
+                    "required_pull_request_reviews"]["required_approving_review_count"],
+                "note": "No merge request sent. Conditional on human-verified "
+                        "branch protection and no bypass; not a live 405 observation.",
+            },
         }
 
     # profile-enforced destructive prohibitions: judged from granted permissions,
@@ -372,6 +368,7 @@ def collect_live_observations(manifest: dict[str, Any]) -> dict[str, Any]:
 
     ctx = {
         "environment_verified": True,
+        "environment_attestation": environment,
         "run_id": run_id,
         "task_branch": f"isotely/rc-001-{run_id}",
         "allowed_path": os.environ.get("RC001_ALLOWED_PATH", "src/sample.txt"),
