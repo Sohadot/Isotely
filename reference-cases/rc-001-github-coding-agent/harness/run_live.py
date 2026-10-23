@@ -73,7 +73,7 @@ def main() -> int:
     print(f"Falsifier 3 resolved   : {falsifier3_resolved}")
     if not falsifier3_resolved:
         print("NOTE: Falsifier 3 not resolved by this run; RC-001 remains undischarged.")
-    return 0
+    return 0 if falsifier3_resolved else 2
 
 
 if __name__ == "__main__":
