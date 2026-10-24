@@ -1,0 +1,79 @@
+{
+  "project": "Isotely",
+  "status": "research_only",
+  "date": "2026-10-24",
+  "jurisdiction": "Canada (federal)",
+  "qualified_legal_review": false,
+  "commercial_release_approved": false,
+  "verified_legal_change_events": 0,
+  "claims": "Narrow research summaries for concept testing only; not legal advice or a complete statement of Canadian law.",
+  "records": [
+    {
+      "id": "ISO-LP-CA-001",
+      "legal_status": "Canadian permanent resident",
+      "comparator": "Canadian citizen",
+      "entitlement": "Pursuing a livelihood in any province",
+      "proposed_assessment": "equal_on_defined_rule",
+      "scope": "Charter s.6(2)(b), subject to s.6(3)-(4); no claim regarding individual occupations or all mobility rights",
+      "sources": [
+        {
+          "url": "https://laws-lois.justice.gc.ca/eng/const/page-12.html",
+          "pinpoint": "Charter section 6(2)(b), (3), (4)"
+        },
+        {
+          "url": "https://www.justice.gc.ca/eng/csj-sjc/rfc-dlc/ccrf-ccdl/check/art6.html",
+          "pinpoint": "Charterpedia section 6"
+        }
+      ],
+      "uncertainty": "Provincial laws, jurisprudence, and individual facts not exhaustively reviewed.",
+      "effective_date": null,
+      "verified_before_after": false
+    },
+    {
+      "id": "ISO-LP-CA-002",
+      "legal_status": "Canadian permanent resident",
+      "comparator": "Canadian citizen",
+      "entitlement": "Entry and continued residence in Canada",
+      "proposed_assessment": "different_legal_basis",
+      "scope": "Charter s.6(1) for citizens vs IRPA s.27(1) and relevant conditions for permanent residents; do not infer absence of a PR right",
+      "sources": [
+        {
+          "url": "https://laws-lois.justice.gc.ca/eng/const/page-12.html",
+          "pinpoint": "Charter section 6(1)"
+        },
+        {
+          "url": "https://laws-lois.justice.gc.ca/eng/acts/i-2.5/section-27.html",
+          "pinpoint": "IRPA section 27"
+        },
+        {
+          "url": "https://laws-lois.justice.gc.ca/eng/acts/I-2.5/section-28.html",
+          "pinpoint": "IRPA section 28"
+        }
+      ],
+      "uncertainty": "Removal, residency obligations, appeals and loss-of-status provisions not assessed.",
+      "effective_date": null,
+      "verified_before_after": false
+    },
+    {
+      "id": "ISO-LP-CA-003",
+      "legal_status": "Canadian permanent resident (noncitizen), age 18+",
+      "comparator": "Canadian citizen, age 18+",
+      "entitlement": "Eligibility to vote federally",
+      "proposed_assessment": "different_entitlement",
+      "scope": "Citizenship is required for federal voting; comparison does not assess provincial/municipal electoral rights",
+      "sources": [
+        {
+          "url": "https://elections.ca/electofacts",
+          "pinpoint": "Federal eligibility explanations"
+        },
+        {
+          "url": "https://www.elections.ca/content.aspx?dir=bkg&document=ec90518&lang=e&section=vot",
+          "pinpoint": "Federal election voting rules"
+        }
+      ],
+      "uncertainty": "Specific statute and subsequent amendments require legal review before production.",
+      "effective_date": null,
+      "verified_before_after": false
+    }
+  ]
+}

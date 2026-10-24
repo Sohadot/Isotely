@@ -44,3 +44,17 @@ The amendment does not assert that domain ownership creates trademark rights, th
 ### Expected cross-asset effect
 
 The principle applies portfolio-wide, particularly to category-defining and doctrine-driven assets whose authority benefits from citation, reuse, and external implementation.
+
+---
+
+## 2026-10-24 — Propose the Isotely historical-to-legal-status category pivot (review branch)
+
+- **Decision ID:** ISO-DEC-2026-10-24-01
+- **Status:** Proposed through a draft pull request; not merged or released.
+- **Affected paths:** \`index.html\`, \`domain-dossier.md\`, \`docs/\`, \`evidence/legal-status/\`, \`archive/\`.
+- **Direction:** Brand Isotely under **“Equal Treatment. Without Citizenship.”**, grounded in the bounded historical fiscal-equality sense of \`isoteleia\`, and explore a modern, global, comparator-specific legal-status treatment relation.
+- **Preservation:** Historical AI-identity files and PR #3 remain undisturbed; the former dossier is retained in the archive.
+- **Risks:** Historical overstatement, legal advice risk, lack of legal review, trademark clearance, data-source licensing, and unvalidated market demand.
+- **Gate:** Preserve \`robots.txt\` and \`noindex\`; no DOI, commercial launch or SEO publication is approved.
+- **Detailed decision:** \`docs/STRATEGIC_PIVOT_DECISION_2026-10-24.md\`.
+
