@@ -1,0 +1,177 @@
+{
+  "title": "Isotely Canada Legal Status Parity — Research-only Pilot v0.1",
+  "owner": "Sohadot",
+  "created_at": "2026-10-24",
+  "description": "Three controlled, historically undeltafied records to test the model. No detected legislative changes, qualified legal approval, commercial offering, or buyer validation.",
+  "market_fit_status": "unvalidated",
+  "records": [
+    {
+      "review_as_of": "2026-10-24",
+      "qualified_legal_review": false,
+      "commercial_release_approved": false,
+      "change_detection": {
+        "verified_change": false,
+        "prior_snapshot": null,
+        "new_snapshot": null,
+        "change_kind": "not_established",
+        "comment": "No before/after legal change was independently reconstructed. This record is a point-in-time analytical test, NOT a verified change event."
+      },
+      "record_id": "ISO-LP-CA-001",
+      "jurisdiction": {
+        "country_code": "CA",
+        "country_name": "Canada",
+        "level": "federal"
+      },
+      "legal_status": "Canadian permanent resident (federal constitutional context)",
+      "comparator_status": "Canadian citizen (federal constitutional context)",
+      "specific_right": {
+        "code": "charter_s6_2_b_livelihood",
+        "definition": "Constitutional right to pursue the gaining of a livelihood in any province.",
+        "condition_context": "Comparison only of the right expressed in Charter s.6(2)(b), and subject to s.6(3) and s.6(4); not a blanket guarantee of equal professional licensing or social benefits."
+      },
+      "evidence_scope": "constitutional_text",
+      "assessment": {
+        "relationship": "equal_on_defined_rule",
+        "finding": "The same Charter s.6(2)(b) protection is expressly extended to both citizens and permanent residents with respect to pursuing a livelihood in any province, subject to the Charter’s stated qualifications.",
+        "confidence": "primary_text_supported",
+        "not_claimed": [
+          "Equal access to each regulated occupation, public benefit or employment position",
+          "Constitutional parity for all mobility or immigration rights",
+          "Independent expert legal approval"
+        ]
+      },
+      "legal_sources": [
+        {
+          "authority": "Government of Canada — Constitution Acts 1867–1982",
+          "pinpoint": "Canadian Charter of Rights and Freedoms, s.6(2)(b), (3), (4)",
+          "url": "https://laws-lois.justice.gc.ca/eng/const/page-12.html",
+          "source_kind": "primary_legislation"
+        },
+        {
+          "authority": "Department of Justice Canada — Charterpedia",
+          "pinpoint": "Section 6, especially internal limits and livelihood discussion",
+          "url": "https://www.justice.gc.ca/eng/csj-sjc/rfc-dlc/ccrf-ccdl/check/art6.html",
+          "source_kind": "government_explanation"
+        }
+      ],
+      "uncertainties": [
+        "No comprehensive review of all provincial rules or Charter case law for specific occupations.",
+        "This is a limited reading of a federal constitutional norm, not an individualized legal opinion."
+      ]
+    },
+    {
+      "review_as_of": "2026-10-24",
+      "qualified_legal_review": false,
+      "commercial_release_approved": false,
+      "change_detection": {
+        "verified_change": false,
+        "prior_snapshot": null,
+        "new_snapshot": null,
+        "change_kind": "not_established",
+        "comment": "No before/after legal change was independently reconstructed. This record is a point-in-time analytical test, NOT a verified change event."
+      },
+      "record_id": "ISO-LP-CA-002",
+      "jurisdiction": {
+        "country_code": "CA",
+        "country_name": "Canada",
+        "level": "federal"
+      },
+      "legal_status": "Canadian permanent resident",
+      "comparator_status": "Canadian citizen",
+      "specific_right": {
+        "code": "right_to_enter_remain_in_canada",
+        "definition": "Legal protection of entry and continued residence in Canada.",
+        "condition_context": "Compare the source and legal conditions of protection, not a bare binary can-enter/cannot-enter flag."
+      },
+      "evidence_scope": "mixed_sources",
+      "assessment": {
+        "relationship": "different_legal_basis",
+        "finding": "Charter s.6(1) expressly guarantees the constitutional right to enter, remain in and leave Canada to citizens. A permanent resident also has a statutory right to enter and remain under IRPA s.27(1), subject to IRPA, including residency obligations under s.28. This does not justify coding permanent residents as having no entry right.",
+        "confidence": "primary_text_supported",
+        "not_claimed": [
+          "Permanent residents have no right to enter or remain in Canada",
+          "The precise outcome for an individual subject to a removal order or residency appeal",
+          "Complete immigration-status risk analysis"
+        ]
+      },
+      "legal_sources": [
+        {
+          "authority": "Government of Canada — Constitution Acts 1867–1982",
+          "pinpoint": "Canadian Charter of Rights and Freedoms, s.6(1)",
+          "url": "https://laws-lois.justice.gc.ca/eng/const/page-12.html",
+          "source_kind": "primary_legislation"
+        },
+        {
+          "authority": "Government of Canada — Immigration and Refugee Protection Act",
+          "pinpoint": "IRPA s.27(1)–(2)",
+          "url": "https://laws-lois.justice.gc.ca/eng/acts/i-2.5/section-27.html",
+          "source_kind": "primary_legislation"
+        },
+        {
+          "authority": "Government of Canada — Immigration and Refugee Protection Act",
+          "pinpoint": "IRPA s.28 residency obligation",
+          "url": "https://laws-lois.justice.gc.ca/eng/acts/I-2.5/section-28.html",
+          "source_kind": "primary_legislation"
+        }
+      ],
+      "uncertainties": [
+        "Other status loss and removal provisions require case-specific interpretation.",
+        "Statutory rights may vary with legal circumstances and should not be collapsed into a constitutional parity binary."
+      ]
+    },
+    {
+      "review_as_of": "2026-10-24",
+      "qualified_legal_review": false,
+      "commercial_release_approved": false,
+      "change_detection": {
+        "verified_change": false,
+        "prior_snapshot": null,
+        "new_snapshot": null,
+        "change_kind": "not_established",
+        "comment": "No before/after legal change was independently reconstructed. This record is a point-in-time analytical test, NOT a verified change event."
+      },
+      "record_id": "ISO-LP-CA-003",
+      "jurisdiction": {
+        "country_code": "CA",
+        "country_name": "Canada",
+        "level": "federal"
+      },
+      "legal_status": "Canadian permanent resident who is not a citizen, aged 18 or older",
+      "comparator_status": "Canadian citizen aged 18 or older",
+      "specific_right": {
+        "code": "federal_election_voting",
+        "definition": "Eligibility to vote in a Canadian federal election.",
+        "condition_context": "Both comparator profiles are at least 18; the citizen comparator must also meet identity/registration rules as applicable."
+      },
+      "evidence_scope": "official_administrative_guidance",
+      "assessment": {
+        "relationship": "different_entitlement",
+        "finding": "Elections Canada states that voting in federal elections requires Canadian citizenship and that permanent residents who are not citizens may not vote. The comparator citizen may vote only if other legal eligibility and procedural conditions are met.",
+        "confidence": "primary_text_supported",
+        "not_claimed": [
+          "Identical restrictions in provincial or municipal elections",
+          "Every citizen automatically votes without satisfying registration or identity requirements",
+          "Unqualified legal clearance for individual advice"
+        ]
+      },
+      "legal_sources": [
+        {
+          "authority": "Elections Canada",
+          "pinpoint": "ElectoFacts — Accurate information on federal voting eligibility",
+          "url": "https://elections.ca/electofacts",
+          "source_kind": "official_guidance"
+        },
+        {
+          "authority": "Elections Canada",
+          "pinpoint": "Voting in a Federal Election — eligibility and identity",
+          "url": "https://www.elections.ca/content.aspx?dir=bkg&document=ec90518&lang=e&section=vot",
+          "source_kind": "official_guidance"
+        }
+      ],
+      "uncertainties": [
+        "The example deliberately excludes provincial and municipal franchise rules.",
+        "Official guidance is not a substitute for review of the Canada Elections Act and subsequent amendments for production release."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://isotely.com/schemas/legal-status-parity-record.v0.1.schema.json",
+  "title": "Isotely legal-status treatment parity record (research draft)",
+  "description": "Research structure only; no claim of trademark exclusivity, legal advice, production legal coverage, or proven legal changes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_id",
+    "jurisdiction",
+    "legal_status",
+    "comparator_status",
+    "specific_right",
+    "review_as_of",
+    "evidence_scope",
+    "assessment",
+    "legal_sources",
+    "uncertainties",
+    "qualified_legal_review",
+    "commercial_release_approved",
+    "change_detection"
+  ],
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "pattern": "^ISO-LP-[A-Z]{2}-[0-9]{3}$"
+    },
+    "jurisdiction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "country_code",
+        "country_name",
+        "level"
+      ],
+      "properties": {
+        "country_code": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "country_name": {
+          "type": "string",
+          "minLength": 2
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "federal",
+            "provincial",
+            "municipal",
+            "supranational"
+          ]
+        }
+      }
+    },
+    "legal_status": {
+      "type": "string",
+      "minLength": 4
+    },
+    "comparator_status": {
+      "type": "string",
+      "minLength": 4
+    },
+    "specific_right": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "definition",
+        "condition_context"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 4
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 10
+        },
+        "condition_context": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    },
+    "review_as_of": {
+      "type": "string",
+      "format": "date"
+    },
+    "evidence_scope": {
+      "type": "string",
+      "enum": [
+        "constitutional_text",
+        "statutory_text",
+        "official_administrative_guidance",
+        "judicial_interpretation",
+        "mixed_sources"
+      ]
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relationship",
+        "finding",
+        "confidence",
+        "not_claimed"
+      ],
+      "properties": {
+        "relationship": {
+          "enum": [
+            "equal_on_defined_rule",
+            "different_entitlement",
+            "different_legal_basis",
+            "conditioned_or_limited",
+            "disputed",
+            "unresolved"
+          ]
+        },
+        "finding": {
+          "type": "string",
+          "minLength": 35
+        },
+        "confidence": {
+          "enum": [
+            "primary_text_supported",
+            "multi_source_reviewed",
+            "provisional",
+            "unresolved"
+          ]
+        },
+        "not_claimed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "legal_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "authority",
+          "pinpoint",
+          "url",
+          "source_kind"
+        ],
+        "properties": {
+          "authority": {
+            "type": "string",
+            "minLength": 4
+          },
+          "pinpoint": {
+            "type": "string",
+            "minLength": 4
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "source_kind": {
+            "enum": [
+              "primary_legislation",
+              "government_explanation",
+              "official_guidance",
+              "court_decision"
+            ]
+          }
+        }
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "qualified_legal_review": {
+      "type": "boolean"
+    },
+    "commercial_release_approved": {
+      "type": "boolean"
+    },
+    "change_detection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verified_change",
+        "prior_snapshot",
+        "new_snapshot",
+        "change_kind",
+        "comment"
+      ],
+      "properties": {
+        "verified_change": {
+          "type": "boolean"
+        },
+        "prior_snapshot": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "new_snapshot": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "change_kind": {
+          "enum": [
+            "not_established",
+            "text_change",
+            "judicial_change",
+            "administrative_interpretation_change"
+          ]
+        },
+        "comment": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "qualified_legal_review": {
+            "const": false
+          }
+        },
+        "required": [
+          "qualified_legal_review"
+        ]
+      },
+      "then": {
+        "properties": {
+          "commercial_release_approved": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "change_detection": {
+            "properties": {
+              "verified_change": {
+                "const": false
+              }
+            },
+            "required": [
+              "verified_change"
+            ]
+          }
+        },
+        "required": [
+          "change_detection"
+        ]
+      },
+      "then": {
+        "properties": {
+          "change_detection": {
+            "properties": {
+              "change_kind": {
+                "const": "not_established"
+              },
+              "prior_snapshot": {
+                "type": "null"
+              },
+              "new_snapshot": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
