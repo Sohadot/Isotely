@@ -1,3 +1,9 @@
+> **HISTORICAL DOSSIER — PRE-PIVOT AI IDENTITY POSITIONING (2026-08).**
+>
+> This document records the earlier Isotely category thesis and is retained intact for provenance. On the proposed `pivot/isotely-equal-treatment-without-citizenship` branch, the new candidate source of truth is `ASSET_THESIS.md`, subject to explicit draft-PR review and approval. The historical AI-identity statements below are **not** the proposed contemporary public positioning. No public launch, trademark clearance, legal approval, or merge is implied by this note. Full history and PR #3 remain preserved.
+
+---
+
 # Isotely.com — Domain Dossier
 
 ## Asset Identity
